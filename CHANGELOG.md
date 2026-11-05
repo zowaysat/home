@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+### 性能
+
+- 字体子集化：Pacifico 仅保留 ASCII（Logo / 版本号），UnidreamLED 仅保留数字与符号（时钟 / 进度百分比）；
+  站点字体从 43.5 KB 降到 14.5 KB。
+- 不再随站点分发 315 KB 未使用的备用完整字体（`Pacifico-Regular-all.ttf`），PWA 预缓存减少约 337 KiB。
+- 新增 `pnpm fonts:subset`（基于 harfbuzz），源字体与生成脚本放在 `scripts/`，可重复生成。
+
 ### PWA
 
 - 缓存策略调整：构建产物与本地资源改由 workbox revision 预缓存（42 项 / 约 1.9 MB，含 10 张壁纸、字体、图标）；
