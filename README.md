@@ -6,7 +6,8 @@
 
 > [!NOTE]
 > 本仓库是 `imsyy/home` 的 fork，已按[《长期维护与二开方案》](docs/长期维护方案.md)完成工程底座改造：
-> 配置层 / 服务层、测试与 CI、PWA 缓存、可访问性、依赖升级（Vite 6 / Vue 3.5 / Element Plus 2.14 / ESLint 9）。
+> 配置层 / 服务层、测试与 CI、PWA 缓存、可访问性、依赖升级（Vite 6 / Vue 3.5 / Element Plus 2.14 / ESLint 10）。
+> 当前版本 **v4.3.1**；`pnpm audit` critical/high 为 0，Lighthouse 移动端约 98 / 100 / 96 / 100。
 > 上游仓库已存档，本项目自行维护；变更记录见 [CHANGELOG](CHANGELOG.md)，升级流程见[升级检查清单](docs/升级检查清单.md)。
 
 <p>
@@ -80,7 +81,8 @@ pnpm build
 ```bash
 pnpm test          # Vitest 单测（15 个文件 / 72 个用例）
 pnpm test:e2e      # Playwright 冒烟（7 条，自动 build + preview）
-pnpm lint:check    # ESLint 9 flat config（CI 使用）
+pnpm lint:check    # ESLint 10 flat config（CI 使用）
+pnpm verify        # 本地复现 CI：lint:check + test + build
 pnpm fonts:subset  # 重新生成 Logo / 数字子集字体
 ```
 

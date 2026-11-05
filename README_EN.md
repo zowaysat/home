@@ -9,6 +9,7 @@ English | [Chinese](./README.md)
 > [long-term maintenance plan](docs/长期维护方案.md). The upstream repository is archived;
 > see the [CHANGELOG](CHANGELOG.md) for changes and the
 > [upgrade checklist](docs/升级检查清单.md) for the upgrade process.
+> Current version **v4.3.1**; `pnpm audit` reports 0 critical/high, Lighthouse mobile ≈ 98 / 100 / 96 / 100.
 
 <p>
 <strong><h2>Homepage</h2></strong>
@@ -72,7 +73,8 @@ pnpm build
 ```bash
 pnpm test          # Vitest unit tests (15 files / 72 cases)
 pnpm test:e2e      # Playwright smoke tests (7 cases, build + preview)
-pnpm lint:check    # ESLint 9 flat config
+pnpm lint:check    # ESLint 10 flat config
+pnpm verify        # Reproduce CI locally: lint:check + test + build
 pnpm fonts:subset  # Regenerate subset fonts
 ```
 

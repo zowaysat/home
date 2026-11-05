@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### 维护
+
+- 新增 `pnpm verify`：一键执行 `lint:check` + `test` + `build`，方便在本地复现 CI 质量门禁。
+
 ### 计划中
 
 - 下季度大版本批次：Vite 7/8、vite-plugin-pwa 2、unplugin 系列、Pinia 4（顺带解决剩余 2 moderate / 2 low 构建链传递依赖）。
