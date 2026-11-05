@@ -1,10 +1,16 @@
 <template>
   <div :class="ui.mobileOpenState ? 'right' : 'right hidden'">
-    <!-- 移动端 Logo -->
-    <div class="logo text-hidden" @click="ui.mobileFuncState = !ui.mobileFuncState">
+    <!-- 移动端 Logo（点击切换功能区） -->
+    <button
+      type="button"
+      class="logo text-hidden plain-button"
+      aria-label="切换移动端功能区"
+      :aria-expanded="ui.mobileFuncState"
+      @click="ui.mobileFuncState = !ui.mobileFuncState"
+    >
       <span class="bg">{{ siteUrl.primary }}</span>
       <span v-if="siteUrl.suffix" class="sm">.{{ siteUrl.suffix }}</span>
-    </div>
+    </button>
     <!-- 功能区 -->
     <Func />
     <!-- 网站链接 -->

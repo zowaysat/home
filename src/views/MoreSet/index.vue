@@ -1,15 +1,13 @@
 <template>
-  <div class="set" @mouseenter="closeShow = true" @mouseleave="closeShow = false" @click.stop>
-    <transition name="el-fade-in-linear">
-      <close-one
-        class="close"
-        theme="filled"
-        size="28"
-        fill="#ffffff60"
-        v-show="closeShow"
-        @click="ui.setOpenState = false"
-      />
-    </transition>
+  <div class="set" @click.stop>
+    <button
+      type="button"
+      class="close plain-button"
+      aria-label="关闭全局设置"
+      @click="ui.setOpenState = false"
+    >
+      <close-one theme="filled" size="28" fill="#ffffff60" aria-hidden="true" />
+    </button>
     <el-row :gutter="40">
       <el-col :span="12" class="left">
         <div class="logo text-hidden">
@@ -19,7 +17,14 @@
         <div class="version">
           <div class="num">v&nbsp;{{ pkg.version }}</div>
           <el-tooltip content="Github 源代码仓库" placement="right" :show-arrow="false">
-            <github-one class="github" theme="outline" size="24" @click="jumpTo(pkg.github)" />
+            <button
+              type="button"
+              class="github plain-button"
+              aria-label="打开 GitHub 源代码仓库"
+              @click="jumpTo(pkg.github)"
+            >
+              <github-one theme="outline" size="24" aria-hidden="true" />
+            </button>
           </el-tooltip>
         </div>
         <el-card class="update">
@@ -59,7 +64,6 @@ import Set from "@/components/Set.vue";
 import pkg from "@/../package.json";
 
 const ui = useUiStore();
-const closeShow = ref(false);
 
 // 站点链接
 const siteUrl = useSiteUrl();
@@ -100,6 +104,13 @@ const jumpTo = (url) => {
     right: 14px;
     width: 28px;
     height: 28px;
+    display: block;
+    // 默认隐藏但保留在 Tab 顺序中，hover 或键盘 focus 时显示
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform 0.3s,
+      opacity 0.3s;
 
     &:hover {
       transform: scale(1.2);
@@ -107,6 +118,14 @@ const jumpTo = (url) => {
 
     &:active {
       transform: scale(1);
+    }
+  }
+
+  &:hover,
+  &:focus-within {
+    .close {
+      opacity: 1;
+      pointer-events: auto;
     }
   }
 
@@ -171,9 +190,16 @@ const jumpTo = (url) => {
           height: 24px;
           margin-left: 12px;
           margin-top: 6px;
+          display: block;
 
           &:hover {
             transform: scale(1.2);
+          }
+
+          .i-icon {
+            width: 24px;
+            height: 24px;
+            display: block;
           }
         }
       }

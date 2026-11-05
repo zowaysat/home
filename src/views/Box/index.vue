@@ -1,25 +1,21 @@
 <template>
-  <div class="box cards" @mouseenter="closeShow = true" @mouseleave="closeShow = false">
-    <transition name="el-fade-in-linear">
-      <close-one
-        class="close"
-        theme="filled"
-        size="28"
-        fill="#ffffff60"
-        v-show="closeShow"
-        @click="ui.boxOpenState = false"
-      />
-    </transition>
-    <transition name="el-fade-in-linear">
-      <setting-two
-        class="setting"
-        theme="filled"
-        size="28"
-        fill="#ffffff60"
-        v-show="closeShow"
-        @click="ui.setOpenState = true"
-      />
-    </transition>
+  <div class="box cards">
+    <button
+      type="button"
+      class="close plain-button"
+      aria-label="关闭盒子"
+      @click="ui.boxOpenState = false"
+    >
+      <close-one theme="filled" size="28" fill="#ffffff60" aria-hidden="true" />
+    </button>
+    <button
+      type="button"
+      class="setting plain-button"
+      aria-label="打开全局设置"
+      @click="ui.setOpenState = true"
+    >
+      <setting-two theme="filled" size="28" fill="#ffffff60" aria-hidden="true" />
+    </button>
     <div class="content">
       <!-- 可在此处自定义任意内容 -->
       <TimeCapsule />
@@ -35,7 +31,6 @@ import TimeCapsule from "@/components/TimeCapsule.vue";
 import MoreContent from "@/components/MoreContent.vue";
 
 const ui = useUiStore();
-const closeShow = ref(false);
 </script>
 
 <style lang="scss" scoped>
@@ -58,6 +53,10 @@ const closeShow = ref(false);
     right: 14px;
     width: 28px;
     height: 28px;
+    display: block;
+    // 默认隐藏但保留在 Tab 顺序中，hover 或键盘 focus 时显示
+    opacity: 0;
+    pointer-events: none;
     transition:
       transform 0.3s,
       opacity 0.3s;
@@ -68,6 +67,15 @@ const closeShow = ref(false);
 
     &:active {
       transform: scale(1);
+    }
+  }
+
+  &:hover,
+  &:focus-within {
+    .close,
+    .setting {
+      opacity: 1;
+      pointer-events: auto;
     }
   }
 

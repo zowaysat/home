@@ -17,14 +17,18 @@
         </section>
       </div>
       <!-- 移动端菜单按钮 -->
-      <Icon
-        class="menu"
-        size="24"
+      <button
+        type="button"
+        class="menu plain-button"
+        aria-label="切换移动端菜单"
+        :aria-expanded="ui.mobileOpenState"
         v-show="!ui.backgroundShow"
         @click="ui.mobileOpenState = !ui.mobileOpenState"
       >
-        <component :is="ui.mobileOpenState ? CloseSmall : HamburgerButton" />
-      </Icon>
+        <Icon size="24">
+          <component :is="ui.mobileOpenState ? CloseSmall : HamburgerButton" />
+        </Icon>
+      </button>
       <!-- 页脚 -->
       <Transition name="fade" mode="out-in">
         <Footer class="f-ter" v-show="!ui.backgroundShow && !ui.setOpenState" />
@@ -36,8 +40,8 @@
 <script setup>
 import { helloInit, checkDays } from "@/utils/getTime.js";
 import { HamburgerButton, CloseSmall } from "@icon-park/vue-next";
-import { useUiStore } from "@/store";
 import { useBreakpoint } from "@/composables/useBreakpoint";
+import { useUiStore, usePlayerStore } from "@/store";
 import { Icon } from "@vicons/utils";
 import Loading from "@/components/Loading.vue";
 import MainLeft from "@/views/Main/Left.vue";
@@ -51,6 +55,7 @@ import config from "@/config";
 import pkg from "@/../package.json";
 
 const ui = useUiStore();
+const player = usePlayerStore();
 const { isMobile } = useBreakpoint();
 
 // 加载完成事件
@@ -97,6 +102,22 @@ const onMouseDown = (event) => {
   }
 };
 
+// 键盘操作：Esc 按层级关闭浮层（壁纸展示 → 设置/盒子 → 音乐面板）
+const onKeydown = (event) => {
+  if (event.key !== "Escape") return;
+  if (ui.backgroundShow) {
+    ui.backgroundShow = false;
+    return;
+  }
+  if (ui.setOpenState || ui.boxOpenState || ui.mobileOpenState) {
+    ui.setOpenState = false;
+    ui.boxOpenState = false;
+    ui.closeMobilePanels();
+    return;
+  }
+  if (player.musicOpenState) player.musicOpenState = false;
+};
+
 onMounted(() => {
   // 自定义鼠标（默认关闭，见 VITE_FEATURE_CUSTOM_CURSOR）
   if (customCursorEnabled) cursorInit();
@@ -106,6 +127,8 @@ onMounted(() => {
 
   // 鼠标中键事件
   window.addEventListener("mousedown", onMouseDown);
+  // 键盘关闭浮层
+  window.addEventListener("keydown", onKeydown);
 
   // 控制台输出
   const styleTitle1 = "font-size: 20px;font-weight: 600;color: rgb(244,167,89);";
@@ -125,6 +148,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener("mousedown", onMouseDown);
+  window.removeEventListener("keydown", onKeydown);
   if (contextMenuLockEnabled) document.oncontextmenu = null;
 });
 </script>

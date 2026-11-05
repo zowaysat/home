@@ -9,23 +9,29 @@
         <span v-if="siteUrl.suffix" class="sm">.{{ siteUrl.suffix }}</span>
       </div>
     </div>
-    <!-- 简介 -->
-    <div class="description cards" @click="changeBox">
-      <div class="content">
-        <Icon size="16">
+    <!-- 简介（点击展开盒子） -->
+    <button
+      type="button"
+      class="description cards plain-button"
+      aria-label="查看更多信息"
+      :aria-expanded="ui.boxOpenState"
+      @click="changeBox"
+    >
+      <span class="content">
+        <Icon size="16" aria-hidden="true">
           <QuoteLeft />
         </Icon>
         <Transition name="fade" mode="out-in">
-          <div :key="descriptionText.hello + descriptionText.text" class="text">
-            <p>{{ descriptionText.hello }}</p>
-            <p>{{ descriptionText.text }}</p>
-          </div>
+          <span :key="descriptionText.hello + descriptionText.text" class="text">
+            <span class="hello">{{ descriptionText.hello }}</span>
+            <span class="intro">{{ descriptionText.text }}</span>
+          </span>
         </Transition>
-        <Icon size="16">
+        <Icon size="16" aria-hidden="true">
           <QuoteRight />
         </Icon>
-      </div>
-    </div>
+      </span>
+    </button>
   </div>
 </template>
 
@@ -130,9 +136,12 @@ watch(
   }
 
   .description {
+    display: block;
+    width: 100%;
     padding: 1rem;
     margin-top: 3.5rem;
     max-width: 460px;
+    text-align: left;
     animation: fade 0.5s;
 
     .content {
@@ -145,10 +154,13 @@ watch(
         margin-right: auto;
         transition: opacity 0.2s;
 
-        p {
-          &:nth-of-type(1) {
-            font-family: "Pacifico-Regular";
-          }
+        .hello,
+        .intro {
+          display: block;
+        }
+
+        .hello {
+          font-family: "Pacifico-Regular";
         }
       }
 

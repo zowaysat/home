@@ -27,7 +27,6 @@ a,
 p {
   margin: 0;
   padding: 0;
-  user-select: none;
   text-decoration: none;
   color: #fff;
   box-sizing: border-box;
@@ -35,6 +34,37 @@ p {
   &:hover {
     transition: 0.3s;
   }
+}
+
+// 正文允许选中复制；仅装饰性元素禁止选择
+#loader-wrapper,
+.logo,
+.menu,
+.swiper-pagination,
+.el-message,
+#cursor {
+  user-select: none;
+}
+
+// 可交互元素的按钮重置（带 .plain-button，避免污染 Element Plus 的 .el-button）
+// 注意：这里用单类选择器，让 .cards 等后续样式可以覆盖背景色
+.plain-button {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+// 键盘焦点可见（鼠标点击不显示）
+:focus-visible {
+  outline: 2px solid #8ec5ff;
+  outline-offset: 3px;
 }
 
 // 链接悬停效果
@@ -231,4 +261,16 @@ scrollbar {
 scrollbar-thumb {
   border-radius: 10px;
   background-color: #eeeeee;
+}
+
+// 尊重系统“减少动态效果”偏好：关闭装饰动画与过渡
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

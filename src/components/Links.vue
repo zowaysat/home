@@ -22,16 +22,18 @@
       <SwiperSlide v-for="site in siteLinksList" :key="site">
         <el-row class="link-all" :gutter="20">
           <el-col v-for="(item, index) in site" :span="8" :key="item">
-            <div
-              class="item cards"
+            <button
+              type="button"
+              class="item cards plain-button"
               :style="index < 3 ? 'margin-bottom: 20px' : null"
+              :aria-label="`打开 ${item.name}`"
               @click="jumpLink(item)"
             >
-              <Icon size="26">
+              <Icon size="26" aria-hidden="true">
                 <component :is="siteIcon[item.icon]" />
               </Icon>
               <span class="name text-hidden">{{ item.name }}</span>
-            </div>
+            </button>
           </el-col>
         </el-row>
       </SwiperSlide>
@@ -141,6 +143,7 @@ onMounted(() => {
       flex-direction: row;
       justify-content: center;
       padding: 0 10px;
+      text-align: center;
       animation: fade 0.5s;
 
       &:hover {

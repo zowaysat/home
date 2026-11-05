@@ -7,18 +7,40 @@
     v-show="player.musicOpenState"
   >
     <div class="btns">
-      <span @click="openMusicList()">音乐列表</span>
-      <span @click="player.musicOpenState = false">回到一言</span>
+      <button type="button" class="plain-button" @click="openMusicList()">音乐列表</button>
+      <button type="button" class="plain-button" @click="player.musicOpenState = false">
+        回到一言
+      </button>
     </div>
     <div class="control">
-      <go-start theme="filled" size="30" fill="#efefef" @click="changeMusicIndex(0)" />
+      <button
+        type="button"
+        class="nav-btn plain-button"
+        aria-label="上一首"
+        @click="changeMusicIndex(0)"
+      >
+        <go-start theme="filled" size="30" fill="#efefef" aria-hidden="true" />
+      </button>
       <Transition name="fade" mode="out-in">
-        <div :key="player.playerState" class="state" @click="changePlayState">
+        <button
+          type="button"
+          :key="player.playerState"
+          class="state plain-button"
+          :aria-label="player.playerState ? '暂停' : '播放'"
+          @click="changePlayState"
+        >
           <play-one theme="filled" size="50" fill="#efefef" v-show="!player.playerState" />
           <pause theme="filled" size="50" fill="#efefef" v-show="player.playerState" />
-        </div>
+        </button>
       </Transition>
-      <go-end theme="filled" size="30" fill="#efefef" @click="changeMusicIndex(1)" />
+      <button
+        type="button"
+        class="nav-btn plain-button"
+        aria-label="下一首"
+        @click="changeMusicIndex(1)"
+      >
+        <go-end theme="filled" size="30" fill="#efefef" aria-hidden="true" />
+      </button>
     </div>
     <div class="menu">
       <div class="name" v-show="!volumeShow">
@@ -39,7 +61,14 @@
           />
           <volume-notice theme="filled" size="24" fill="#efefef" v-else />
         </div>
-        <el-slider v-model="volumeNum" :show-tooltip="false" :min="0" :max="1" :step="0.01" />
+        <el-slider
+          v-model="volumeNum"
+          aria-label="音量"
+          :show-tooltip="false"
+          :min="0"
+          :max="1"
+          :step="0.01"
+        />
       </div>
     </div>
   </div>
@@ -48,13 +77,14 @@
     <div class="music-list" v-show="musicListShow" @click="closeMusicList()">
       <Transition name="zoom">
         <div class="list" v-show="musicListShow" @click.stop>
-          <close-one
-            class="close"
-            theme="filled"
-            size="28"
-            fill="#ffffff60"
+          <button
+            type="button"
+            class="close plain-button"
+            aria-label="关闭音乐列表"
             @click="closeMusicList()"
-          />
+          >
+            <close-one theme="filled" size="28" fill="#ffffff60" aria-hidden="true" />
+          </button>
           <Player
             v-if="playerLoaded"
             ref="playerRef"
@@ -187,7 +217,7 @@ watch(
     display: flex;
     align-items: center;
     margin-bottom: 6px;
-    span {
+    button {
       background: #ffffff26;
       padding: 2px 8px;
       border-radius: 6px;
@@ -206,7 +236,13 @@ watch(
     align-items: center;
     justify-content: space-evenly;
     width: 100%;
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     .state {
+      display: block;
       transition: opacity 0.1s;
       .i-icon {
         width: 50px;

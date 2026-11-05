@@ -4,6 +4,15 @@
 
 ## [Unreleased]
 
+### 可访问性
+
+- 交互元素改为原生 `button` 并补无障碍名称：简介卡片、网站链接、一言刷新、打开音乐面板、音乐列表/回到一言、
+  播放/暂停、上/下一首、盒子关闭/设置入口、设置关闭、移动端菜单与 Logo、GitHub 入口。
+- 新增 `.plain-button` 按钮重置与全局 `:focus-visible` 焦点样式；盒子/设置/音乐面板的隐藏按钮在键盘聚焦时可见。
+- 新增 `@media (prefers-reduced-motion: reduce)` 动画降级；正文恢复可选中，`user-select: none` 只保留在装饰元素。
+- 支持 Esc 按层级关闭浮层；`aria-expanded` 标记展开状态；设置项 switch 通过 `label` 映射 `aria-label`。
+- e2e 新增键盘操作与 reduced-motion 两条用例（共 7 条）。
+
 ### 性能
 
 - 字体子集化：Pacifico 仅保留 ASCII（Logo / 版本号），UnidreamLED 仅保留数字与符号（时钟 / 进度百分比）；

@@ -1,28 +1,28 @@
 <template>
-  <div
-    class="hitokoto cards"
-    v-show="!player.musicOpenState"
-    @mouseenter="openMusicShow = true"
-    @mouseleave="openMusicShow = false"
-    @click.stop
-  >
-    <!-- 打开音乐面板 -->
-    <Transition name="el-fade-in-linear">
-      <div
-        class="open-music"
-        v-show="openMusicShow && player.musicIsOk"
-        @click="player.musicOpenState = true"
-      >
-        <music-menu theme="filled" size="18" fill="#efefef" />
-        <span>打开音乐播放器</span>
-      </div>
-    </Transition>
-    <!-- 一言内容 -->
+  <div class="hitokoto cards" v-show="!player.musicOpenState" @click.stop>
+    <!-- 打开音乐面板（hover 或键盘 focus 时显示） -->
+    <button
+      type="button"
+      class="open-music plain-button"
+      aria-label="打开音乐播放器"
+      v-show="player.musicIsOk"
+      @click="player.musicOpenState = true"
+    >
+      <music-menu theme="filled" size="18" fill="#efefef" aria-hidden="true" />
+      <span>打开音乐播放器</span>
+    </button>
+    <!-- 一言内容（点击刷新） -->
     <Transition name="el-fade-in-linear" mode="out-in">
-      <div :key="hitokotoData.text" class="content" @click="updateHitokoto">
+      <button
+        type="button"
+        :key="hitokotoData.text"
+        class="content plain-button"
+        aria-label="刷新一言"
+        @click="updateHitokoto"
+      >
         <span class="text">{{ hitokotoData.text }}</span>
         <span class="from">-「&nbsp;{{ hitokotoData.from }}&nbsp;」</span>
-      </div>
+      </button>
     </Transition>
   </div>
 </template>
@@ -34,9 +34,6 @@ import { usePlayerStore } from "@/store";
 import debounce from "@/utils/debounce.js";
 
 const player = usePlayerStore();
-
-// 开启音乐面板按钮显隐
-const openMusicShow = ref(false);
 
 // 一言数据
 const hitokotoData = reactive({
@@ -93,6 +90,10 @@ onMounted(() => {
     background: #00000026;
     padding: 4px 0;
     border-radius: 8px 8px 0 0;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
     .i-icon {
       width: 18px;
       height: 18px;
@@ -103,11 +104,18 @@ onMounted(() => {
       font-size: 0.95rem;
     }
   }
+  &:hover .open-music,
+  &:focus-within .open-music {
+    opacity: 1;
+    pointer-events: auto;
+  }
   .content {
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    text-align: left;
     .text {
       font-size: 1.1rem;
       word-break: break-all;

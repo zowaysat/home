@@ -161,3 +161,41 @@ test("PWA 注册成功，断网后仍可打开首页", async ({ page, context })
   await expect(page.locator("#footer")).toBeVisible();
   await context.setOffline(false);
 });
+
+test("键盘可操作：Enter 打开盒子/设置，Esc 逐层关闭", async ({ page }) => {
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await waitForHome(page);
+
+  // 交互元素是原生 button，可聚焦并用 Enter 激活
+  const description = page.getByRole("button", { name: "查看更多信息" });
+  await description.focus();
+  await expect(description).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".box")).toBeVisible();
+
+  const openSettings = page.getByRole("button", { name: "打开全局设置" });
+  await openSettings.focus();
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".set")).toBeVisible();
+
+  // 展开“个性化调整”后，设置项有可读名称（el-switch 的 label 映射为 aria-label）
+  await page
+    .locator(".set .el-collapse-item__header", { hasText: "个性化调整" })
+    .click();
+  await expect(page.getByRole("switch", { name: "建站日期显示" })).toHaveCount(1);
+
+  // Esc 按层级关闭
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".set")).toBeHidden();
+  await expect(page.locator(".box")).toBeHidden();
+});
+
+test("prefers-reduced-motion 下页面仍正常渲染", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await waitForHome(page);
+
+  await expect(page.locator("#main")).toBeVisible();
+  await expect(page.locator(".description")).toBeVisible();
+  await expect(page.locator("#footer")).toBeVisible();
+});
