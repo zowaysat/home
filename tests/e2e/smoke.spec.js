@@ -135,3 +135,29 @@ test("旧 data 持久化数据迁移到 home:state:v1", async ({ page }) => {
   expect(await page.evaluate(() => localStorage.getItem("data"))).toBeNull();
   await expect(page.locator("#footer")).not.toHaveClass(/blur/);
 });
+
+test("PWA 注册成功，断网后仍可打开首页", async ({ page, context }) => {
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await waitForHome(page);
+
+  // 等待 Service Worker 激活并接管当前页面
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+    return true;
+  });
+  await expect
+    .poll(() => page.evaluate(() => Boolean(navigator.serviceWorker.controller)), { timeout: 20_000 })
+    .toBe(true);
+
+  // 在线刷新一次，让页面导航响应写入缓存
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await waitForHome(page);
+
+  // 断网后刷新：应命中预缓存 / NetworkFirst 回退，页面仍可打开
+  await context.setOffline(true);
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await expect(page.locator("#main")).toBeVisible({ timeout: 30_000 });
+  await expect(page.locator("#loader-wrapper")).toHaveClass(/loaded/);
+  await expect(page.locator("#footer")).toBeVisible();
+  await context.setOffline(false);
+});

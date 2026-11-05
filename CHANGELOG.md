@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+### PWA
+
+- 缓存策略调整：构建产物与本地资源改由 workbox revision 预缓存（42 项 / 约 1.9 MB，含 10 张壁纸、字体、图标）；
+  HTML 导航改 `NetworkFirst`（3s 超时回退缓存）；图片 `CacheFirst` + 30 天过期；移除旧的 js/css 运行时 `CacheFirst`。
+- 更新提示改为一键刷新，且首次安装（此前无 controller）不再提示；清理过期预缓存。
+- e2e 新增“PWA 注册成功、断网后仍可打开首页”。
+
 ### 测试与 CI
 
 - **Playwright e2e**：引入 `@playwright/test`，新增 4 条首页冒烟用例（无脚本错误 / 本地壁纸可见 /

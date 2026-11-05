@@ -22,22 +22,38 @@ export default ({ mode }) =>
       }),
       VitePWA({
         registerType: "autoUpdate",
+        // manifest 里的图标已由 globPatterns 纳入预缓存，避免重复注入
+        includeManifestIcons: false,
         workbox: {
           skipWaiting: true,
           clientsClaim: true,
+          // 关闭插件默认的 precache 导航回退，交给下方 NetworkFirst 处理 HTML，
+          // 避免升级后用户长时间停留在旧 index.html
+          navigateFallback: "",
+          // app shell + 本地静态资源（壁纸 / 字体 / 图标）全部预缓存；
+          // js/css 由 workbox 的 revision 机制管理，不再用运行时 CacheFirst
+          globPatterns: ["**/*.{js,css,html,ico,png,svg,jpg,jpeg,webp,woff2,woff,ttf}"],
+          // 清理不再被引用的旧预缓存，避免升级后残留
+          cleanupOutdatedCaches: true,
           runtimeCaching: [
             {
-              urlPattern: /(.*?)\.(js|css|woff2|woff|ttf)/, // js / css 静态资源缓存
-              handler: "CacheFirst",
+              // 页面导航：网络优先（3s 超时），失败回退缓存，避免发版后长时间停留旧页面
+              urlPattern: ({ request }) => request.mode === "navigate",
+              handler: "NetworkFirst",
               options: {
-                cacheName: "js-css-cache",
+                cacheName: "html-network",
+                networkTimeoutSeconds: 3,
+                expiration: { maxEntries: 10 },
               },
             },
             {
-              urlPattern: /(.*?)\.(png|jpe?g|svg|gif|bmp|psd|tiff|tga|eps)/, // 图片缓存
+              // 图片（含用户替换的壁纸 / 远程图源）：缓存优先 + 30 天过期
+              urlPattern: ({ request }) => request.destination === "image",
               handler: "CacheFirst",
               options: {
                 cacheName: "image-cache",
+                expiration: { maxEntries: 60, maxAgeSeconds: 60 * 60 * 24 * 30 },
+                cacheableResponse: { statuses: [0, 200] },
               },
             },
           ],
