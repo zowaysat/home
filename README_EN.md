@@ -91,6 +91,23 @@ docker compose up -d --build
 The image uses a multi-stage build (`node:22-alpine` → `nginxinc/nginx-unprivileged`,
 non-root, listening on 8080). The build uses `.env` when present, otherwise `.env.example`.
 
+### Alibaba Cloud ESA Pages
+
+> For Alibaba Cloud ESA "Functions and Pages → Local upload" static hosting (no server required).
+
+1. Copy `.env.example` to `.env` and adjust the site settings.
+2. Build and optionally package:
+
+```bash
+pnpm install --frozen-lockfile
+pnpm build
+pnpm package:pages   # -> release/home-dist-vX.Y.Z.zip (excludes *.gz)
+```
+
+3. Upload the `dist` folder or the zip in the ESA console, set a project name and deploy.
+4. Notes: HTTPS is required for the PWA / Service Worker; the build assumes deployment at the domain root
+   (`/assets/...`) — set `base` in `vite.config.js` for sub-path hosting. Re-deploy by rebuilding and uploading.
+
 ### Weather
 
 Weather and area access requires `高德开放平台` related API

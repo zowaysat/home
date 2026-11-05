@@ -105,6 +105,28 @@ docker compose up -d --build
 构建时优先使用项目根目录的 `.env`，不存在则回退到 `.env.example`；如需自定义站点配置，
 请在构建前准备好 `.env`。
 
+### ⚙️ 阿里云 ESA Pages 部署
+
+> 适合阿里云「边缘安全加速 ESA → 函数和 Pages → 本地上传」的纯静态部署，无需服务器。
+
+1. 准备配置：复制 `.env.example` 为 `.env`，按需修改站点域名、图标、天气 Key 等
+2. 安装并构建：
+
+```bash
+pnpm install --frozen-lockfile
+pnpm build
+
+# 可选：生成用于上传的压缩包（自动排除 .gz，输出到 release/）
+pnpm package:pages
+```
+
+3. 上传部署：在 ESA 控制台「创建函数 → 本地上传」中，
+   直接选择 `dist` 文件夹上传，或上传 `release/home-dist-vX.Y.Z.zip`；填写项目名称后点击部署
+4. 注意事项：
+   - 请使用 HTTPS 域名访问（Pages 默认提供），PWA 与 Service Worker 才能正常注册
+   - 当前按根路径部署（构建产物引用 `/assets/...`）；如需部署到子路径，请在 `vite.config.js` 设置 `base`
+   - 更新方式：重新执行 `pnpm build`（或 `pnpm package:pages`）后重新上传；已安装 PWA 的用户下次访问会收到更新提示
+
 ### ⚙️ Vercel 部署
 
 > 其他部署平台大致相同，在此不做说明

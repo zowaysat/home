@@ -19,6 +19,9 @@ playwright-report
 blob-report
 playwright/.cache
 
+# 部署产物（阿里云 Pages / 静态托管压缩包）
+release
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
