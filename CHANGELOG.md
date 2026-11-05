@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+### 测试与 CI
+
+- **Playwright e2e**：引入 `@playwright/test`，新增 4 条首页冒烟用例（无脚本错误 / 本地壁纸可见 /
+  改设置刷新后仍生效 / 旧 `data` 数据迁移），`playwright.config.js` 使用 `build + preview` 作为 webServer。
+- **CI**：新增 `e2e` job（安装 Chromium 后运行冒烟，失败上传报告与 trace）；
+  `test:all` 串行执行单测与 e2e。
+
 ### 工程化（P1 收尾）
 
 - **store 拆分**：`mainStore` 拆为 `useUiStore`（界面）、`useSettingsStore`（持久化设置）、

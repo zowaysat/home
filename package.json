@@ -13,6 +13,9 @@
     "check:env": "node scripts/check-env.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:report": "playwright show-report",
+    "test:all": "pnpm test && pnpm test:e2e",
     "format": "prettier --write src/",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts,.vue --fix",
     "lint:check": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts,.vue --max-warnings=0"
@@ -32,6 +35,7 @@
   },
   "devDependencies": {
     "@icon-park/vue-next": "^1.4.2",
+    "@playwright/test": "1.58.0",
     "@vicons/fa": "^0.12.0",
     "@vicons/utils": "^0.1.4",
     "@vitejs/plugin-vue": "^4.6.2",
