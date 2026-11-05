@@ -70,7 +70,7 @@ pnpm build
 ### Testing
 
 ```bash
-pnpm test          # Vitest unit tests (13 files / 68 cases)
+pnpm test          # Vitest unit tests (15 files / 72 cases)
 pnpm test:e2e      # Playwright smoke tests (7 cases, build + preview)
 pnpm lint:check    # ESLint 9 flat config
 pnpm fonts:subset  # Regenerate subset fonts

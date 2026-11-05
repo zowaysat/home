@@ -78,7 +78,7 @@ pnpm build
 ### 🧪 测试与质量
 
 ```bash
-pnpm test          # Vitest 单测（13 个文件 / 68 个用例）
+pnpm test          # Vitest 单测（15 个文件 / 72 个用例）
 pnpm test:e2e      # Playwright 冒烟（7 条，自动 build + preview）
 pnpm lint:check    # ESLint 9 flat config（CI 使用）
 pnpm fonts:subset  # 重新生成 Logo / 数字子集字体
