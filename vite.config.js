@@ -123,7 +123,6 @@ export default ({ mode }) =>
       preprocessorOptions: {
         scss: {
           api: "modern",
-          silenceDeprecations: ["legacy-js-api"],
         },
       },
     },

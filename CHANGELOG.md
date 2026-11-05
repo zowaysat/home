@@ -4,6 +4,16 @@
 
 ## [Unreleased]
 
+### 构建工具链
+
+- 依赖升级第一批：Vite 4.5 → **5.4.21**（构建约 31s → 22s），`@vitejs/plugin-vue` 5.2.4、
+  `vite-plugin-pwa` 0.21.2、`unplugin-auto-import` 0.17.8、`unplugin-vue-components` 0.26.0、Vitest 2.1.9。
+- 移除未使用依赖 `axios`；移除 sass 中已无效的 `silenceDeprecations` 配置（keep `api: "modern"`）。
+- 验证：68 单测 / 7 条 e2e / lint / build / `pnpm install --frozen-lockfile` 全部通过；
+  PWA 预缓存 41 项 1597 KiB，`sw.js` 路由保持 NetworkFirst + CacheFirst。
+- 说明：`vite-plugin-compression@0.5.1` 的 peer 为 `vite >=2`，在 Vite 5 下构建正常，暂不替换；
+  Vite 6 / Vue 3.5 / Element Plus / ESLint 9 作为后续独立批次。
+
 ### 可访问性
 
 - 交互元素改为原生 `button` 并补无障碍名称：简介卡片、网站链接、一言刷新、打开音乐面板、音乐列表/回到一言、
