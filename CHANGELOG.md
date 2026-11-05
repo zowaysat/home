@@ -7,11 +7,15 @@
 ### 维护
 
 - 新增 `pnpm verify`：一键执行 `lint:check` + `test` + `build`，方便在本地复现 CI 质量门禁。
+- 新增 `pnpm package:pages` 与阿里云 ESA Pages 部署说明：生成 `release/home-dist-vX.Y.Z.zip`
+  （自动排除 `.gz`，可直接在「函数和 Pages → 本地上传」使用）。
+- CI 修复：固定 `ubuntu-24.04`（避免 `ubuntu-latest` 迁移）、Playwright 安装重试、
+  `webServer` 显式绑定 `127.0.0.1`（修复 Linux 上 `localhost` 解析为 `::1` 导致的 e2e 超时）。
 
 ### 计划中
 
 - 下季度大版本批次：Vite 7/8、vite-plugin-pwa 2、unplugin 系列、Pinia 4（顺带解决剩余 2 moderate / 2 low 构建链传递依赖）。
-- 远端 CI 首跑确认后关闭 DoD 最后一项。
+- 远端 CI 已首跑全绿；后续按每月 / 每季度例行维护。
 
 ## [4.3.1] - 2026-11-05（测试补齐 + 依赖安全维护）
 
