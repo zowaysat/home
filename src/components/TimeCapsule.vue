@@ -30,24 +30,19 @@
 import { HourglassFull } from "@icon-park/vue-next";
 import { getTimeCapsule, siteDateStatistics } from "@/utils/getTime.js";
 import { mainStore } from "@/store";
+import { useNow } from "@/composables/useNow";
+import config from "@/config";
 const store = mainStore();
 
+// 当前时间由全局单一时钟驱动
+const now = useNow();
+const startDate = config.site.startDate;
+
 // 进度条数据
-const timeData = ref(getTimeCapsule());
-const startDate = ref(import.meta.env.VITE_SITE_START);
-const startDateText = ref(null);
-const timeInterval = ref(null);
-
-onMounted(() => {
-  timeInterval.value = setInterval(() => {
-    timeData.value = getTimeCapsule();
-    if (startDate.value) startDateText.value = siteDateStatistics(new Date(startDate.value));
-  }, 1000);
-});
-
-onBeforeUnmount(() => {
-  clearInterval(timeInterval.value);
-});
+const timeData = computed(() => getTimeCapsule(now.value));
+const startDateText = computed(() =>
+  startDate ? siteDateStatistics(new Date(startDate), now.value) : null,
+);
 </script>
 
 <style lang="scss" scoped>

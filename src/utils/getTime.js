@@ -3,8 +3,8 @@ import { SpaCandle } from "@icon-park/vue-next";
 import dayjs from "dayjs";
 
 // 时钟
-export const getCurrentTime = () => {
-  let time = new Date();
+export const getCurrentTime = (date = new Date()) => {
+  let time = date;
   let year = time.getFullYear();
   let month = time.getMonth() + 1 < 10 ? "0" + (time.getMonth() + 1) : time.getMonth() + 1;
   let day = time.getDate() < 10 ? "0" + time.getDate() : time.getDate();
@@ -25,8 +25,8 @@ export const getCurrentTime = () => {
 };
 
 // 时光胶囊
-export const getTimeCapsule = () => {
-  const now = dayjs();
+export const getTimeCapsule = (date = new Date()) => {
+  const now = dayjs(date);
   const dayText = {
     day: "今日",
     week: "本周",
@@ -122,8 +122,7 @@ export const checkDays = () => {
 };
 
 // 建站日期统计
-export const siteDateStatistics = (startDate) => {
-  const currentDate = new Date();
+export const siteDateStatistics = (startDate, currentDate = new Date()) => {
   let years = currentDate.getFullYear() - startDate.getFullYear();
   let months = currentDate.getMonth() - startDate.getMonth();
   let days = currentDate.getDate() - startDate.getDate();

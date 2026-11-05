@@ -29,7 +29,7 @@
 
 <script setup>
 import { MusicMenu, Error } from "@icon-park/vue-next";
-import { getHitokoto } from "@/api";
+import { getHitokoto } from "@/services/hitokoto";
 import { mainStore } from "@/store";
 import debounce from "@/utils/debounce.js";
 
@@ -48,7 +48,7 @@ const hitokotoData = reactive({
 const getHitokotoData = async () => {
   try {
     const result = await getHitokoto();
-    hitokotoData.text = result.hitokoto;
+    hitokotoData.text = result.text;
     hitokotoData.from = result.from;
   } catch (error) {
     ElMessage({

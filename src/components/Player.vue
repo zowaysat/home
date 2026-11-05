@@ -22,8 +22,9 @@
 
 <script setup>
 import { MusicOne, PlayWrong } from "@icon-park/vue-next";
-import { getPlayerList } from "@/api";
+import { getPlayerList } from "@/services/music";
 import { mainStore } from "@/store";
+import config from "@/config";
 import APlayer from "@worstone/vue-aplayer";
 
 const store = mainStore();
@@ -84,42 +85,42 @@ const listHeight = computed(() => {
 });
 
 // 初始化播放器
-onMounted(() => {
-  nextTick(() => {
-    try {
-      getPlayerList(props.songServer, props.songType, props.songId).then((res) => {
-        console.log(res);
-        // 更改播放器加载状态
-        store.musicIsOk = true;
-        // 生成歌单
-        playList.value = res;
-        console.log("音乐加载完成");
-        console.log(playList.value);
-        console.log(playIndex.value, playList.value.length, props.volume);
-      });
-    } catch (err) {
-      console.error(err);
-      store.musicIsOk = false;
-      ElMessage({
-        message: "播放器加载失败",
-        grouping: true,
-        icon: h(PlayWrong, {
-          theme: "filled",
-          fill: "#efefef",
-        }),
-      });
-    }
-  });
+onMounted(async () => {
+  try {
+    // 注意：这里必须用 await，否则 Promise 的 reject 不会被 try/catch 捕获
+    playList.value = await getPlayerList({
+      api: config.music.api,
+      server: props.songServer,
+      type: props.songType,
+      id: props.songId,
+    });
+    // 更改播放器加载状态
+    store.musicIsOk = true;
+  } catch (err) {
+    store.musicIsOk = false;
+    console.error("播放器加载失败：", err);
+    ElMessage({
+      message: "播放器加载失败，请检查音乐接口配置",
+      grouping: true,
+      icon: h(PlayWrong, {
+        theme: "filled",
+        fill: "#efefef",
+      }),
+    });
+  }
 });
 
 // 播放
 const onPlay = () => {
-  console.log("播放");
-  playIndex.value = player.value.aplayer.index;
+  if (!player.value?.aplayer) return;
+  const index = player.value.aplayer.index;
+  const song = playList.value[index];
+  if (!song) return;
+  playIndex.value = index;
   // 播放状态
-  store.setPlayerState(player.value.audioRef.paused);
+  store.setPlayerState(player.value.audioRef?.paused ?? false);
   // 储存播放器信息
-  store.setPlayerData(playList.value[playIndex.value].name, playList.value[playIndex.value].artist);
+  store.setPlayerData(song.name, song.artist);
   ElMessage({
     message: store.getPlayerData.name + " - " + store.getPlayerData.artist,
     grouping: true,
@@ -132,7 +133,7 @@ const onPlay = () => {
 
 // 暂停
 const onPause = () => {
-  store.setPlayerState(player.value.audioRef.paused);
+  store.setPlayerState(player.value?.audioRef?.paused ?? true);
 };
 
 // 音频时间更新事件
@@ -153,25 +154,26 @@ const onTimeUp = () => {
 
 // 切换播放暂停事件
 const playToggle = () => {
-  player.value.toggle();
+  player.value?.toggle();
 };
 
 // 切换音量事件
 const changeVolume = (value) => {
-  player.value.setVolume(value, false);
+  player.value?.setVolume(value, false);
 };
 
 // 切换上下曲
 const changeSong = (type) => {
+  if (!player.value) return;
   type === 0 ? player.value.skipBack() : player.value.skipForward();
   nextTick(() => {
-    player.value.play();
+    player.value?.play();
   });
 };
 
 // 切换歌曲列表状态
 const toggleList = () => {
-  player.value.toggleList();
+  player.value?.toggleList();
 };
 
 // 加载音频错误

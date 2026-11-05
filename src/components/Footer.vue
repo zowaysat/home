@@ -11,13 +11,13 @@
             -
           </span>
           {{ fullYear }}
-          <a :href="siteUrl">{{ siteAuthor }}</a>
+          <a :href="siteUrl.href">{{ siteAuthor }}</a>
         </span>
         <!-- 以下信息请不要修改哦 -->
         <span class="hidden">
           &amp;&nbsp;Made&nbsp;by
-          <a :href="config.github" target="_blank">
-            {{ config.author }}
+          <a :href="pkg.github" target="_blank">
+            {{ pkg.author }}
           </a>
         </span>
         <!-- 站点备案 -->
@@ -32,7 +32,7 @@
         <Transition name="fade" mode="out-in">
           <div class="lrc-all" :key="store.getPlayerLrc">
             <music-one theme="filled" size="18" fill="#efefef" />
-            <span class="lrc-text text-hidden" v-html="store.getPlayerLrc" />
+            <span class="lrc-text text-hidden">{{ store.getPlayerLrc }}</span>
             <music-one theme="filled" size="18" fill="#efefef" />
           </div>
         </Transition>
@@ -44,28 +44,19 @@
 <script setup>
 import { MusicOne } from "@icon-park/vue-next";
 import { mainStore } from "@/store";
-import config from "@/../package.json";
+import { useSiteUrl } from "@/composables/useSiteUrl";
+import config from "@/config";
+import pkg from "@/../package.json";
 
 const store = mainStore();
 const fullYear = new Date().getFullYear();
 
 // 加载配置数据
-// const siteStartDate = ref(import.meta.env.VITE_SITE_START);
-const startYear = ref(
-  import.meta.env.VITE_SITE_START?.length >= 4 ? 
-  import.meta.env.VITE_SITE_START.substring(0, 4) : null
-);
-const siteIcp = ref(import.meta.env.VITE_SITE_ICP);
-const siteAuthor = ref(import.meta.env.VITE_SITE_AUTHOR);
-const siteUrl = computed(() => {
-  const url = import.meta.env.VITE_SITE_URL;
-  if (!url) return "https://www.imsyy.top";
-  // 判断协议前缀
-  if (!url.startsWith("http://") && !url.startsWith("https://")) {
-    return "//" + url;
-  }
-  return url;
-});
+const startDate = config.site.startDate;
+const startYear = startDate.length >= 4 ? startDate.slice(0, 4) : null;
+const siteIcp = config.site.icp;
+const siteAuthor = config.site.author;
+const siteUrl = useSiteUrl();
 </script>
 
 <style lang="scss" scoped>

@@ -7,9 +7,12 @@
   "version": "4.1.4",
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
-    "build": "vite build",
+    "dev": "node scripts/check-env.mjs development && vite --host",
+    "build": "node scripts/check-env.mjs production && vite build",
     "preview": "vite preview",
+    "check:env": "node scripts/check-env.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "format": "prettier --write src/",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts,.vue --fix"
   },
@@ -40,6 +43,7 @@
     "unplugin-vue-components": "^0.22.12",
     "vite": "^4.5.3",
     "vite-plugin-compression": "^0.5.1",
-    "vite-plugin-pwa": "^0.14.7"
+    "vite-plugin-pwa": "^0.14.7",
+    "vitest": "0.34.6"
   }
 }

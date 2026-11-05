@@ -13,13 +13,13 @@
     <el-row :gutter="40">
       <el-col :span="12" class="left">
         <div class="logo text-hidden">
-          <span class="bg">{{ siteUrl[0] }}</span>
-          <span class="sm">.{{ siteUrl[1] }}</span>
+          <span class="bg">{{ siteUrl.primary }}</span>
+          <span v-if="siteUrl.suffix" class="sm">.{{ siteUrl.suffix }}</span>
         </div>
         <div class="version">
-          <div class="num">v&nbsp;{{ config.version }}</div>
+          <div class="num">v&nbsp;{{ pkg.version }}</div>
           <el-tooltip content="Github 源代码仓库" placement="right" :show-arrow="false">
-            <github-one class="github" theme="outline" size="24" @click="jumpTo(config.github)" />
+            <github-one class="github" theme="outline" size="24" @click="jumpTo(pkg.github)" />
           </el-tooltip>
         </div>
         <el-card class="update">
@@ -54,23 +54,15 @@
 <script setup>
 import { CloseOne, SettingTwo, GithubOne, AddOne, Bug } from "@icon-park/vue-next";
 import { mainStore } from "@/store";
+import { useSiteUrl } from "@/composables/useSiteUrl";
 import Set from "@/components/Set.vue";
-import config from "@/../package.json";
+import pkg from "@/../package.json";
 
 const store = mainStore();
 const closeShow = ref(false);
 
 // 站点链接
-const siteUrl = computed(() => {
-  const url = import.meta.env.VITE_SITE_URL;
-  if (!url) return "imsyy.top".split(".");
-  // 判断协议前缀
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-    const urlFormat = url.replace(/^(https?:\/\/)/, "");
-    return urlFormat.split(".");
-  }
-  return url.split(".");
-});
+const siteUrl = useSiteUrl();
 
 // 更新日志
 const upData = reactive({

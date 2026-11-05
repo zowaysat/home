@@ -31,32 +31,20 @@
 <script setup>
 import { getCurrentTime } from "@/utils/getTime";
 import { mainStore } from "@/store";
+import { useNow } from "@/composables/useNow";
+import config from "@/config";
 import Music from "@/components/Music.vue";
 import Hitokoto from "@/components/Hitokoto.vue";
 import Weather from "@/components/Weather.vue";
 
 const store = mainStore();
 
-// 当前时间
-const currentTime = ref({});
-const timeInterval = ref(null);
+// 当前时间：由全局单一时钟驱动
+const now = useNow();
+const currentTime = computed(() => getCurrentTime(now.value));
 
 // 播放器 id
-const playerHasId = import.meta.env.VITE_SONG_ID;
-
-// 更新时间
-const updateTimeData = () => {
-  currentTime.value = getCurrentTime();
-};
-
-onMounted(() => {
-  updateTimeData();
-  timeInterval.value = setInterval(updateTimeData, 1000);
-});
-
-onBeforeUnmount(() => {
-  clearInterval(timeInterval.value);
-});
+const playerHasId = config.music.id;
 </script>
 
 <style lang="scss" scoped>

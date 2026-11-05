@@ -16,11 +16,12 @@
 
 <script setup>
 import { mainStore } from "@/store";
+import config from "@/config";
 
 const store = mainStore();
 
 // 配置
-const siteName = import.meta.env.VITE_SITE_NAME;
+const siteName = config.site.name;
 </script>
 
 <style lang="scss" scoped>

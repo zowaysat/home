@@ -5,10 +5,15 @@
         <div class="bg-set">
           <el-radio-group v-model="coverType" text-color="#ffffff" @change="radioChange">
             <el-radio value="0" size="large" border>默认壁纸</el-radio>
-            <el-radio value="1" size="large" border>每日一图</el-radio>
-            <el-radio value="2" size="large" border>随机风景</el-radio>
-            <el-radio value="3" size="large" border>随机动漫</el-radio>
+            <template v-if="remoteWallpaperEnabled">
+              <el-radio value="1" size="large" border>每日一图</el-radio>
+              <el-radio value="2" size="large" border>随机风景</el-radio>
+              <el-radio value="3" size="large" border>随机动漫</el-radio>
+            </template>
           </el-radio-group>
+          <p v-if="!remoteWallpaperEnabled" class="tip">
+            远程壁纸源已停用，可在 .env 中设置 VITE_FEATURE_REMOTE_WALLPAPER=true 后重新构建开启
+          </p>
         </div>
       </el-collapse-item>
       <el-collapse-item title="个性化调整" name="2">
@@ -89,6 +94,7 @@
 <script setup>
 import { CheckSmall, CloseSmall, SuccessPicture } from "@icon-park/vue-next";
 import { mainStore } from "@/store";
+import config from "@/config";
 import { storeToRefs } from "pinia";
 
 const store = mainStore();
@@ -102,6 +108,9 @@ const {
   playerOrder,
   playerLoop,
 } = storeToRefs(store);
+
+// 远程壁纸开关（与 Background.vue 保持一致）
+const remoteWallpaperEnabled = config.features.remoteWallpaper;
 
 // 默认选中项
 const activeName = ref("1");
@@ -120,6 +129,12 @@ const radioChange = () => {
 
 <style lang="scss" scoped>
 .setting {
+  .tip {
+    margin-top: 12px;
+    font-size: 12px;
+    line-height: 1.6;
+    opacity: 0.6;
+  }
   .collapse {
     border-radius: 8px;
     --el-collapse-content-bg-color: #ffffff10;

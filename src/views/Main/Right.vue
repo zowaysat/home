@@ -2,8 +2,8 @@
   <div :class="store.mobileOpenState ? 'right' : 'right hidden'">
     <!-- 移动端 Logo -->
     <div class="logo text-hidden" @click="store.mobileFuncState = !store.mobileFuncState">
-      <span class="bg">{{ siteUrl[0] }}</span>
-      <span class="sm">.{{ siteUrl[1] }}</span>
+      <span class="bg">{{ siteUrl.primary }}</span>
+      <span v-if="siteUrl.suffix" class="sm">.{{ siteUrl.suffix }}</span>
     </div>
     <!-- 功能区 -->
     <Func />
@@ -14,21 +14,13 @@
 
 <script setup>
 import { mainStore } from "@/store";
+import { useSiteUrl } from "@/composables/useSiteUrl";
 import Func from "@/views/Func/index.vue";
 import Link from "@/components/Links.vue";
 const store = mainStore();
 
 // 站点链接
-const siteUrl = computed(() => {
-  const url = import.meta.env.VITE_SITE_URL;
-  if (!url) return "imsyy.top".split(".");
-  // 判断协议前缀
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-    const urlFormat = url.replace(/^(https?:\/\/)/, "");
-    return urlFormat.split(".");
-  }
-  return url.split(".");
-});
+const siteUrl = useSiteUrl();
 </script>
 
 <style lang="scss" scoped>

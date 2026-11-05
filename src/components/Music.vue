@@ -56,6 +56,7 @@
             @click="closeMusicList()"
           />
           <Player
+            v-if="playerLoaded"
             ref="playerRef"
             :songServer="playerData.server"
             :songType="playerData.type"
@@ -81,6 +82,7 @@ import {
 } from "@icon-park/vue-next";
 import Player from "@/components/Player.vue";
 import { mainStore } from "@/store";
+import config from "@/config";
 const store = mainStore();
 
 // 音量条数据
@@ -90,46 +92,71 @@ const volumeNum = ref(store.musicVolume ? store.musicVolume : 0.7);
 // 播放列表数据
 const musicListShow = ref(false);
 const playerRef = ref(null);
+// 播放器懒加载：首次打开音乐面板前不请求歌单，减少首屏请求
+const playerLoaded = ref(false);
 const playerData = reactive({
-  server: import.meta.env.VITE_SONG_SERVER,
-  type: import.meta.env.VITE_SONG_TYPE,
-  id: import.meta.env.VITE_SONG_ID,
+  server: config.music.server,
+  type: config.music.type,
+  id: config.music.id,
 });
 
 // 开启播放列表
-const openMusicList = () => {
+const openMusicList = async () => {
+  playerLoaded.value = true;
   musicListShow.value = true;
-  playerRef.value.toggleList();
+  await nextTick();
+  playerRef.value?.toggleList();
 };
 
 // 关闭播放列表
 const closeMusicList = () => {
   musicListShow.value = false;
-  playerRef.value.toggleList();
+  playerRef.value?.toggleList();
 };
 
 // 音乐播放暂停
 const changePlayState = () => {
-  playerRef.value.playToggle();
+  playerRef.value?.playToggle();
 };
 
 // 音乐上下曲
 const changeMusicIndex = (type) => {
-  playerRef.value.changeSong(type);
+  playerRef.value?.changeSong(type);
 };
+
+// 空格键事件
+const onKeydown = (e) => {
+  if (!store.musicIsOk || e.code !== "Space") {
+    return;
+  }
+  // 输入框内不拦截空格
+  const target = e.target;
+  if (target instanceof HTMLElement && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) {
+    return;
+  }
+  e.preventDefault();
+  changePlayState();
+};
+
+// 首次打开音乐面板时才挂载播放器
+watch(
+  () => store.musicOpenState,
+  (value) => {
+    if (value) playerLoaded.value = true;
+  },
+  { immediate: true },
+);
 
 onMounted(() => {
   // 空格键事件
-  window.addEventListener("keydown", (e) => {
-    if (!store.musicIsOk) {
-      return;
-    }
-    if (e.code == "Space") {
-      changePlayState();
-    }
-  });
+  window.addEventListener("keydown", onKeydown);
   // 挂载方法至 window
   window.$openList = openMusicList;
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("keydown", onKeydown);
+  delete window.$openList;
 });
 
 // 监听音量变化
@@ -137,7 +164,7 @@ watch(
   () => volumeNum.value,
   (value) => {
     store.musicVolume = value;
-    playerRef.value.changeVolume(store.musicVolume);
+    playerRef.value?.changeVolume(store.musicVolume);
   },
 );
 </script>

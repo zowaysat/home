@@ -4,9 +4,9 @@
     <!-- Logo -->
     <div class="logo">
       <img class="logo-img" :src="siteLogo" alt="logo" />
-      <div :class="{ name: true, 'text-hidden': true, long: siteUrl[0].length >= 6 }">
-        <span class="bg">{{ siteUrl[0] }}</span>
-        <span class="sm">.{{ siteUrl[1] }}</span>
+      <div :class="{ name: true, 'text-hidden': true, long: siteUrl.primary.length >= 6 }">
+        <span class="bg">{{ siteUrl.primary }}</span>
+        <span v-if="siteUrl.suffix" class="sm">.{{ siteUrl.suffix }}</span>
       </div>
     </div>
     <!-- 简介 -->
@@ -34,26 +34,19 @@ import { Icon } from "@vicons/utils";
 import { QuoteLeft, QuoteRight } from "@vicons/fa";
 import { Error } from "@icon-park/vue-next";
 import { mainStore } from "@/store";
+import { useSiteUrl } from "@/composables/useSiteUrl";
+import config from "@/config";
 const store = mainStore();
 
 // 主页站点logo
-const siteLogo = import.meta.env.VITE_SITE_MAIN_LOGO;
+const siteLogo = config.site.mainLogo;
 // 站点链接
-const siteUrl = computed(() => {
-  const url = import.meta.env.VITE_SITE_URL;
-  if (!url) return "imsyy.top".split(".");
-  // 判断协议前缀
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-    const urlFormat = url.replace(/^(https?:\/\/)/, "");
-    return urlFormat.split(".");
-  }
-  return url.split(".");
-});
+const siteUrl = useSiteUrl();
 
 // 简介区域文字
 const descriptionText = reactive({
-  hello: import.meta.env.VITE_DESC_HELLO,
-  text: import.meta.env.VITE_DESC_TEXT,
+  hello: config.introduction.hello,
+  text: config.introduction.text,
 });
 
 // 切换右侧功能区
@@ -77,11 +70,11 @@ watch(
   () => store.boxOpenState,
   (value) => {
     if (value) {
-      descriptionText.hello = import.meta.env.VITE_DESC_HELLO_OTHER;
-      descriptionText.text = import.meta.env.VITE_DESC_TEXT_OTHER;
+      descriptionText.hello = config.introduction.helloOther;
+      descriptionText.text = config.introduction.textOther;
     } else {
-      descriptionText.hello = import.meta.env.VITE_DESC_HELLO;
-      descriptionText.text = import.meta.env.VITE_DESC_TEXT;
+      descriptionText.hello = config.introduction.hello;
+      descriptionText.text = config.introduction.text;
     }
   },
 );

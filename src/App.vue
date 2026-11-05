@@ -46,7 +46,8 @@ import Footer from "@/components/Footer.vue";
 import Box from "@/views/Box/index.vue";
 import MoreSet from "@/views/MoreSet/index.vue";
 import cursorInit from "@/utils/cursor.js";
-import config from "@/../package.json";
+import config from "@/config";
+import pkg from "@/../package.json";
 
 const store = mainStore();
 
@@ -76,30 +77,40 @@ watch(
   },
 );
 
-onMounted(() => {
-  // 自定义鼠标
-  cursorInit();
+// 功能开关（默认关闭，避免全局劫持）
+const customCursorEnabled = config.features.customCursor;
+const contextMenuLockEnabled = config.features.contextMenuLock;
 
-  // 屏蔽右键
-  document.oncontextmenu = () => {
+// 屏蔽右键
+const onContextMenu = () => {
+  ElMessage({
+    message: "为了浏览体验，本站禁用右键",
+    grouping: true,
+    duration: 2000,
+  });
+  return false;
+};
+
+// 鼠标中键事件：切换壁纸展示状态
+const onMouseDown = (event) => {
+  if (event.button == 1) {
+    store.backgroundShow = !store.backgroundShow;
     ElMessage({
-      message: "为了浏览体验，本站禁用右键",
+      message: `已${store.backgroundShow ? "开启" : "退出"}壁纸展示状态`,
       grouping: true,
-      duration: 2000,
     });
-    return false;
-  };
+  }
+};
+
+onMounted(() => {
+  // 自定义鼠标（默认关闭，见 VITE_FEATURE_CUSTOM_CURSOR）
+  if (customCursorEnabled) cursorInit();
+
+  // 屏蔽右键（默认关闭，见 VITE_FEATURE_CONTEXT_MENU_LOCK）
+  if (contextMenuLockEnabled) document.oncontextmenu = onContextMenu;
 
   // 鼠标中键事件
-  window.addEventListener("mousedown", (event) => {
-    if (event.button == 1) {
-      store.backgroundShow = !store.backgroundShow;
-      ElMessage({
-        message: `已${store.backgroundShow ? "开启" : "退出"}壁纸展示状态`,
-        grouping: true,
-      });
-    }
-  });
+  window.addEventListener("mousedown", onMouseDown);
 
   // 监听当前页面宽度
   getWidth();
@@ -117,12 +128,14 @@ onMounted(() => {
   | | | |\\/| |\\___ \\  \\   /    \\   /
  _| |_| |  | |____) |  | |      | |
 |_____|_|  |_|_____/   |_|      |_|`;
-  const content = `\n\n版本: ${config.version}\n主页: ${config.home}\nGithub: ${config.github}`;
+  const content = `\n\n版本: ${pkg.version}\n主页: ${pkg.home}\nGithub: ${pkg.github}`;
   console.info(`%c${title1} %c${title2} %c${content}`, styleTitle1, styleTitle2, styleContent);
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener("resize", getWidth);
+  window.removeEventListener("mousedown", onMouseDown);
+  if (contextMenuLockEnabled) document.oncontextmenu = null;
 });
 </script>
 

@@ -1,5 +1,5 @@
 // 防抖
-let timeout;
+let timeout = null;
 
 function debounce(func, wait = 300, immediate = false) {
   // 清除定时器
@@ -8,13 +8,14 @@ function debounce(func, wait = 300, immediate = false) {
   }
   // 立即执行
   if (immediate) {
-    var callNow = !timeout;
+    const callNow = timeout === null;
     timeout = setTimeout(function () {
       timeout = null;
     }, wait);
     if (callNow) typeof func === "function" && func();
   } else {
     timeout = setTimeout(function () {
+      timeout = null;
       typeof func === "function" && func();
     }, wait);
   }

@@ -1,0 +1,7 @@
+# pnpm 构建脚本白名单
+# 说明：pnpm 10+ 默认拦截依赖的 install/postinstall 脚本。
+# 本项目构建只需要 esbuild（Vite 依赖）与 vue-demi（Pinia 依赖），
+# 其他依赖的构建脚本保持默认禁用。
+allowBuilds:
+  esbuild: true
+  vue-demi: true

@@ -25,6 +25,8 @@
 
 <script setup>
 import { mainStore } from "@/store";
+import config from "@/config";
+import { LOCAL_WALLPAPER_COUNT, resolveWallpaperUrl } from "@/services/wallpaper";
 import { Error } from "@icon-park/vue-next";
 
 const store = mainStore();
@@ -32,21 +34,16 @@ const bgUrl = ref(null);
 const imgTimeout = ref(null);
 const emit = defineEmits(["loadComplete"]);
 
-// 壁纸随机数
-// 请依据文件夹内的图片个数修改 Math.random() 后面的第一个数字
-const bgRandom = Math.floor(Math.random() * 10 + 1);
+// 远程壁纸默认关闭：上游图源（Bing / vvhan）当前多数已失效，
+// 可在 .env 中设置 VITE_FEATURE_REMOTE_WALLPAPER=true 后再启用
+const remoteWallpaperEnabled = config.features.remoteWallpaper;
+
+// 本次会话的本地壁纸序号（保持不变）
+const localIndex = Math.floor(Math.random() * LOCAL_WALLPAPER_COUNT) + 1;
 
 // 更换壁纸链接
 const changeBg = (type) => {
-  if (type == 0) {
-    bgUrl.value = `/images/background${bgRandom}.jpg`;
-  } else if (type == 1) {
-    bgUrl.value = "https://api.dujin.org/bing/1920.php";
-  } else if (type == 2) {
-    bgUrl.value = "https://api.vvhan.com/api/wallpaper/views";
-  } else if (type == 3) {
-    bgUrl.value = "https://api.vvhan.com/api/wallpaper/acg";
-  }
+  bgUrl.value = resolveWallpaperUrl(type, { remoteEnabled: remoteWallpaperEnabled, localIndex });
 };
 
 // 图片加载完成
@@ -76,7 +73,7 @@ const imgLoadError = () => {
       fill: "#efefef",
     }),
   });
-  bgUrl.value = `/images/background${bgRandom}.jpg`;
+  bgUrl.value = resolveWallpaperUrl("0", { localIndex });
 };
 
 // 监听壁纸切换
@@ -88,6 +85,10 @@ watch(
 );
 
 onMounted(() => {
+  // 远程壁纸开关关闭时，把历史持久化的远程类型回退为本地壁纸
+  if (!remoteWallpaperEnabled && store.coverType !== "0") {
+    store.coverType = "0";
+  }
   // 加载壁纸
   changeBg(store.coverType);
 });
