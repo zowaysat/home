@@ -1,0 +1,62 @@
+# 质量门禁：lint + 单测 + 构建（替代旧版“仅构建”的 build.yml）
+name: CI
+
+on:
+  push:
+    branches:
+      - dev
+      - master
+  pull_request:
+  workflow_dispatch:
+
+# 同一分支只保留最新一次运行，避免排队浪费
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Lint / Test / Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 构建期 env 校验要求 .env 存在：CI 从模板复制，不依赖仓库提交密钥
+      - name: Prepare env file
+        run: cp .env.example .env
+
+      - name: Lint
+        run: pnpm lint:check
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: home-dist
+          path: dist
+          retention-days: 7
