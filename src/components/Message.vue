@@ -33,10 +33,12 @@
 import { Icon } from "@vicons/utils";
 import { QuoteLeft, QuoteRight } from "@vicons/fa";
 import { Error } from "@icon-park/vue-next";
-import { mainStore } from "@/store";
+import { useUiStore } from "@/store";
+import { useBreakpoint } from "@/composables/useBreakpoint";
 import { useSiteUrl } from "@/composables/useSiteUrl";
 import config from "@/config";
-const store = mainStore();
+const ui = useUiStore();
+const { isMobile } = useBreakpoint();
 
 // 主页站点logo
 const siteLogo = config.site.mainLogo;
@@ -51,8 +53,8 @@ const descriptionText = reactive({
 
 // 切换右侧功能区
 const changeBox = () => {
-  if (store.getInnerWidth >= 721) {
-    store.boxOpenState = !store.boxOpenState;
+  if (!isMobile.value) {
+    ui.boxOpenState = !ui.boxOpenState;
   } else {
     ElMessage({
       message: "当前页面宽度不足以开启盒子",
@@ -67,7 +69,7 @@ const changeBox = () => {
 
 // 监听状态变化
 watch(
-  () => store.boxOpenState,
+  () => ui.boxOpenState,
   (value) => {
     if (value) {
       descriptionText.hello = config.introduction.helloOther;

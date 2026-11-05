@@ -93,11 +93,11 @@
 
 <script setup>
 import { CheckSmall, CloseSmall, SuccessPicture } from "@icon-park/vue-next";
-import { mainStore } from "@/store";
+import { useSettingsStore } from "@/store";
 import config from "@/config";
 import { storeToRefs } from "pinia";
 
-const store = mainStore();
+const settings = useSettingsStore();
 const {
   coverType,
   siteStartShow,
@@ -107,7 +107,7 @@ const {
   playerAutoplay,
   playerOrder,
   playerLoop,
-} = storeToRefs(store);
+} = storeToRefs(settings);
 
 // 远程壁纸开关（与 Background.vue 保持一致）
 const remoteWallpaperEnabled = config.features.remoteWallpaper;

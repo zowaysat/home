@@ -7,7 +7,7 @@
         size="28"
         fill="#ffffff60"
         v-show="closeShow"
-        @click="store.setOpenState = false"
+        @click="ui.setOpenState = false"
       />
     </transition>
     <el-row :gutter="40">
@@ -53,12 +53,12 @@
 
 <script setup>
 import { CloseOne, SettingTwo, GithubOne, AddOne, Bug } from "@icon-park/vue-next";
-import { mainStore } from "@/store";
+import { useUiStore } from "@/store";
 import { useSiteUrl } from "@/composables/useSiteUrl";
 import Set from "@/components/Set.vue";
 import pkg from "@/../package.json";
 
-const store = mainStore();
+const ui = useUiStore();
 const closeShow = ref(false);
 
 // 站点链接

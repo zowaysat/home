@@ -1,7 +1,7 @@
 <template>
-  <div :class="store.mobileOpenState ? 'right' : 'right hidden'">
+  <div :class="ui.mobileOpenState ? 'right' : 'right hidden'">
     <!-- 移动端 Logo -->
-    <div class="logo text-hidden" @click="store.mobileFuncState = !store.mobileFuncState">
+    <div class="logo text-hidden" @click="ui.mobileFuncState = !ui.mobileFuncState">
       <span class="bg">{{ siteUrl.primary }}</span>
       <span v-if="siteUrl.suffix" class="sm">.{{ siteUrl.suffix }}</span>
     </div>
@@ -13,11 +13,11 @@
 </template>
 
 <script setup>
-import { mainStore } from "@/store";
+import { useUiStore } from "@/store";
 import { useSiteUrl } from "@/composables/useSiteUrl";
 import Func from "@/views/Func/index.vue";
 import Link from "@/components/Links.vue";
-const store = mainStore();
+const ui = useUiStore();
 
 // 站点链接
 const siteUrl = useSiteUrl();

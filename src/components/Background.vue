@@ -1,7 +1,7 @@
 <template>
-  <div :class="store.backgroundShow ? 'cover show' : 'cover'">
+  <div :class="ui.backgroundShow ? 'cover show' : 'cover'">
     <img
-      v-show="store.imgLoadStatus"
+      v-show="ui.imgLoadStatus"
       :src="bgUrl"
       class="bg"
       alt="cover"
@@ -9,10 +9,10 @@
       @error.once="imgLoadError"
       @animationend="imgAnimationEnd"
     />
-    <div :class="store.backgroundShow ? 'gray hidden' : 'gray'" />
+    <div :class="ui.backgroundShow ? 'gray hidden' : 'gray'" />
     <Transition name="fade" mode="out-in">
       <a
-        v-if="store.backgroundShow && store.coverType != '3'"
+        v-if="ui.backgroundShow && settings.coverType != '3'"
         class="down"
         :href="bgUrl"
         target="_blank"
@@ -24,12 +24,13 @@
 </template>
 
 <script setup>
-import { mainStore } from "@/store";
+import { useSettingsStore, useUiStore } from "@/store";
 import config from "@/config";
 import { LOCAL_WALLPAPER_COUNT, resolveWallpaperUrl } from "@/services/wallpaper";
 import { Error } from "@icon-park/vue-next";
 
-const store = mainStore();
+const ui = useUiStore();
+const settings = useSettingsStore();
 const bgUrl = ref(null);
 const imgTimeout = ref(null);
 const emit = defineEmits(["loadComplete"]);
@@ -50,7 +51,7 @@ const changeBg = (type) => {
 const imgLoadComplete = () => {
   imgTimeout.value = setTimeout(
     () => {
-      store.setImgLoadStatus(true);
+      ui.setImgLoadStatus(true);
     },
     Math.floor(Math.random() * (600 - 300 + 1)) + 300,
   );
@@ -78,7 +79,7 @@ const imgLoadError = () => {
 
 // 监听壁纸切换
 watch(
-  () => store.coverType,
+  () => settings.coverType,
   (value) => {
     changeBg(value);
   },
@@ -86,11 +87,11 @@ watch(
 
 onMounted(() => {
   // 远程壁纸开关关闭时，把历史持久化的远程类型回退为本地壁纸
-  if (!remoteWallpaperEnabled && store.coverType !== "0") {
-    store.coverType = "0";
+  if (!remoteWallpaperEnabled && settings.coverType !== "0") {
+    settings.coverType = "0";
   }
   // 加载壁纸
-  changeBg(store.coverType);
+  changeBg(settings.coverType);
 });
 
 onBeforeUnmount(() => {

@@ -3,11 +3,11 @@
     v-if="playList[0]"
     ref="player"
     :audio="playList"
-    :autoplay="store.playerAutoplay"
+    :autoplay="settings.playerAutoplay"
     :theme="theme"
     :autoSwitch="false"
-    :loop="store.playerLoop"
-    :order="store.playerOrder"
+    :loop="settings.playerLoop"
+    :order="settings.playerOrder"
     :volume="volume"
     :showLrc="true"
     :listFolded="listFolded"
@@ -23,11 +23,12 @@
 <script setup>
 import { MusicOne, PlayWrong } from "@icon-park/vue-next";
 import { getPlayerList } from "@/services/music";
-import { mainStore } from "@/store";
+import { usePlayerStore, useSettingsStore } from "@/store";
 import config from "@/config";
 import APlayer from "@worstone/vue-aplayer";
 
-const store = mainStore();
+const playerStore = usePlayerStore();
+const settings = useSettingsStore();
 
 // 获取播放器 DOM
 const player = ref(null);
@@ -95,9 +96,9 @@ onMounted(async () => {
       id: props.songId,
     });
     // 更改播放器加载状态
-    store.musicIsOk = true;
+    playerStore.musicIsOk = true;
   } catch (err) {
-    store.musicIsOk = false;
+    playerStore.musicIsOk = false;
     console.error("播放器加载失败：", err);
     ElMessage({
       message: "播放器加载失败，请检查音乐接口配置",
@@ -118,11 +119,11 @@ const onPlay = () => {
   if (!song) return;
   playIndex.value = index;
   // 播放状态
-  store.setPlayerState(player.value.audioRef?.paused ?? false);
+  playerStore.setPlaying(true);
   // 储存播放器信息
-  store.setPlayerData(song.name, song.artist);
+  playerStore.setPlayerData(song.name, song.artist);
   ElMessage({
-    message: store.getPlayerData.name + " - " + store.getPlayerData.artist,
+    message: playerStore.playerData.name + " - " + playerStore.playerData.artist,
     grouping: true,
     icon: h(MusicOne, {
       theme: "filled",
@@ -133,7 +134,7 @@ const onPlay = () => {
 
 // 暂停
 const onPause = () => {
-  store.setPlayerState(player.value?.audioRef?.paused ?? true);
+  playerStore.setPlaying(false);
 };
 
 // 音频时间更新事件
@@ -149,7 +150,7 @@ const onTimeUp = () => {
   } else if (lrc === "Not available") {
     lrc = "歌词加载失败";
   }
-  store.setPlayerLrc(lrc);
+  playerStore.setPlayerLrc(lrc);
 };
 
 // 切换播放暂停事件

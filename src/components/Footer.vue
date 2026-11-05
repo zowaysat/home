@@ -1,7 +1,7 @@
 <template>
-  <footer id="footer" :class="store.footerBlur ? 'blur' : null">
+  <footer id="footer" :class="settings.footerBlur ? 'blur' : null">
     <Transition name="fade" mode="out-in">
-      <div v-if="!store.playerState || !store.playerLrcShow" class="power">
+      <div v-if="!player.playerState || !settings.playerLrcShow" class="power">
         <span>
           <span :class="startYear < fullYear ? 'c-hidden' : 'hidden'">Copyright&nbsp;</span>
           &copy;
@@ -30,9 +30,9 @@
       </div>
       <div v-else class="lrc">
         <Transition name="fade" mode="out-in">
-          <div class="lrc-all" :key="store.getPlayerLrc">
+          <div class="lrc-all" :key="player.playerLrc">
             <music-one theme="filled" size="18" fill="#efefef" />
-            <span class="lrc-text text-hidden">{{ store.getPlayerLrc }}</span>
+            <span class="lrc-text text-hidden">{{ player.playerLrc }}</span>
             <music-one theme="filled" size="18" fill="#efefef" />
           </div>
         </Transition>
@@ -43,12 +43,13 @@
 
 <script setup>
 import { MusicOne } from "@icon-park/vue-next";
-import { mainStore } from "@/store";
+import { usePlayerStore, useSettingsStore } from "@/store";
 import { useSiteUrl } from "@/composables/useSiteUrl";
 import config from "@/config";
 import pkg from "@/../package.json";
 
-const store = mainStore();
+const settings = useSettingsStore();
+const player = usePlayerStore();
 const fullYear = new Date().getFullYear();
 
 // 加载配置数据

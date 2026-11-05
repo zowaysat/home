@@ -7,7 +7,7 @@
         size="28"
         fill="#ffffff60"
         v-show="closeShow"
-        @click="store.boxOpenState = false"
+        @click="ui.boxOpenState = false"
       />
     </transition>
     <transition name="el-fade-in-linear">
@@ -17,7 +17,7 @@
         size="28"
         fill="#ffffff60"
         v-show="closeShow"
-        @click="store.setOpenState = true"
+        @click="ui.setOpenState = true"
       />
     </transition>
     <div class="content">
@@ -30,11 +30,11 @@
 
 <script setup>
 import { CloseOne, SettingTwo } from "@icon-park/vue-next";
-import { mainStore } from "@/store";
+import { useUiStore } from "@/store";
 import TimeCapsule from "@/components/TimeCapsule.vue";
 import MoreContent from "@/components/MoreContent.vue";
 
-const store = mainStore();
+const ui = useUiStore();
 const closeShow = ref(false);
 </script>
 

@@ -5,14 +5,14 @@
   <Background @loadComplete="loadComplete" />
   <!-- 主界面 -->
   <Transition name="fade" mode="out-in">
-    <main id="main" v-if="store.imgLoadStatus">
-      <div class="container" v-show="!store.backgroundShow">
-        <section class="all" v-show="!store.setOpenState">
+    <main id="main" v-if="ui.imgLoadStatus">
+      <div class="container" v-show="!ui.backgroundShow">
+        <section class="all" v-show="!ui.setOpenState">
           <MainLeft />
-          <MainRight v-show="!store.boxOpenState" />
-          <Box v-show="store.boxOpenState" />
+          <MainRight v-show="!ui.boxOpenState" />
+          <Box v-show="ui.boxOpenState" />
         </section>
-        <section class="more" v-show="store.setOpenState" @click="store.setOpenState = false">
+        <section class="more" v-show="ui.setOpenState" @click="ui.setOpenState = false">
           <MoreSet />
         </section>
       </div>
@@ -20,14 +20,14 @@
       <Icon
         class="menu"
         size="24"
-        v-show="!store.backgroundShow"
-        @click="store.mobileOpenState = !store.mobileOpenState"
+        v-show="!ui.backgroundShow"
+        @click="ui.mobileOpenState = !ui.mobileOpenState"
       >
-        <component :is="store.mobileOpenState ? CloseSmall : HamburgerButton" />
+        <component :is="ui.mobileOpenState ? CloseSmall : HamburgerButton" />
       </Icon>
       <!-- 页脚 -->
       <Transition name="fade" mode="out-in">
-        <Footer class="f-ter" v-show="!store.backgroundShow && !store.setOpenState" />
+        <Footer class="f-ter" v-show="!ui.backgroundShow && !ui.setOpenState" />
       </Transition>
     </main>
   </Transition>
@@ -36,7 +36,8 @@
 <script setup>
 import { helloInit, checkDays } from "@/utils/getTime.js";
 import { HamburgerButton, CloseSmall } from "@icon-park/vue-next";
-import { mainStore } from "@/store";
+import { useUiStore } from "@/store";
+import { useBreakpoint } from "@/composables/useBreakpoint";
 import { Icon } from "@vicons/utils";
 import Loading from "@/components/Loading.vue";
 import MainLeft from "@/views/Main/Left.vue";
@@ -49,12 +50,8 @@ import cursorInit from "@/utils/cursor.js";
 import config from "@/config";
 import pkg from "@/../package.json";
 
-const store = mainStore();
-
-// 页面宽度
-const getWidth = () => {
-  store.setInnerWidth(window.innerWidth);
-};
+const ui = useUiStore();
+const { isMobile } = useBreakpoint();
 
 // 加载完成事件
 const loadComplete = () => {
@@ -66,16 +63,14 @@ const loadComplete = () => {
   });
 };
 
-// 监听宽度变化
-watch(
-  () => store.innerWidth,
-  (value) => {
-    if (value < 721) {
-      store.boxOpenState = false;
-      store.setOpenState = false;
-    }
-  },
-);
+// 断点变化：移动端收起盒子 / 设置，桌面端收起移动端菜单
+watch(isMobile, (mobile) => {
+  if (mobile) {
+    ui.closePanels();
+  } else {
+    ui.closeMobilePanels();
+  }
+});
 
 // 功能开关（默认关闭，避免全局劫持）
 const customCursorEnabled = config.features.customCursor;
@@ -94,9 +89,9 @@ const onContextMenu = () => {
 // 鼠标中键事件：切换壁纸展示状态
 const onMouseDown = (event) => {
   if (event.button == 1) {
-    store.backgroundShow = !store.backgroundShow;
+    ui.backgroundShow = !ui.backgroundShow;
     ElMessage({
-      message: `已${store.backgroundShow ? "开启" : "退出"}壁纸展示状态`,
+      message: `已${ui.backgroundShow ? "开启" : "退出"}壁纸展示状态`,
       grouping: true,
     });
   }
@@ -111,10 +106,6 @@ onMounted(() => {
 
   // 鼠标中键事件
   window.addEventListener("mousedown", onMouseDown);
-
-  // 监听当前页面宽度
-  getWidth();
-  window.addEventListener("resize", getWidth);
 
   // 控制台输出
   const styleTitle1 = "font-size: 20px;font-weight: 600;color: rgb(244,167,89);";
@@ -133,7 +124,6 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener("resize", getWidth);
   window.removeEventListener("mousedown", onMouseDown);
   if (contextMenuLockEnabled) document.oncontextmenu = null;
 });

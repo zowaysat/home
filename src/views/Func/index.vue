@@ -1,6 +1,6 @@
 <template>
   <!-- 功能区域 -->
-  <div :class="store.mobileFuncState ? 'function mobile' : 'function'">
+  <div :class="ui.mobileFuncState ? 'function mobile' : 'function'">
     <el-row :gutter="20">
       <el-col :span="12">
         <div class="left">
@@ -30,14 +30,14 @@
 
 <script setup>
 import { getCurrentTime } from "@/utils/getTime";
-import { mainStore } from "@/store";
+import { useUiStore } from "@/store";
 import { useNow } from "@/composables/useNow";
 import config from "@/config";
 import Music from "@/components/Music.vue";
 import Hitokoto from "@/components/Hitokoto.vue";
 import Weather from "@/components/Weather.vue";
 
-const store = mainStore();
+const ui = useUiStore();
 
 // 当前时间：由全局单一时钟驱动
 const now = useNow();

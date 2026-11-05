@@ -1,7 +1,7 @@
 <template>
   <div
     class="hitokoto cards"
-    v-show="!store.musicOpenState"
+    v-show="!player.musicOpenState"
     @mouseenter="openMusicShow = true"
     @mouseleave="openMusicShow = false"
     @click.stop
@@ -10,8 +10,8 @@
     <Transition name="el-fade-in-linear">
       <div
         class="open-music"
-        v-show="openMusicShow && store.musicIsOk"
-        @click="store.musicOpenState = true"
+        v-show="openMusicShow && player.musicIsOk"
+        @click="player.musicOpenState = true"
       >
         <music-menu theme="filled" size="18" fill="#efefef" />
         <span>打开音乐播放器</span>
@@ -30,10 +30,10 @@
 <script setup>
 import { MusicMenu, Error } from "@icon-park/vue-next";
 import { getHitokoto } from "@/services/hitokoto";
-import { mainStore } from "@/store";
+import { usePlayerStore } from "@/store";
 import debounce from "@/utils/debounce.js";
 
-const store = mainStore();
+const player = usePlayerStore();
 
 // 开启音乐面板按钮显隐
 const openMusicShow = ref(false);

@@ -19,7 +19,7 @@
         <el-progress :text-inside="true" :stroke-width="20" :percentage="parseFloat(item.percentage)" />
       </div>
       <!-- 建站日期 -->
-      <div v-if="store.siteStartShow" class="capsule-item start">
+      <div v-if="settings.siteStartShow" class="capsule-item start">
         <div class="item-title">{{ startDateText }}</div>
       </div>
     </div>
@@ -29,10 +29,10 @@
 <script setup>
 import { HourglassFull } from "@icon-park/vue-next";
 import { getTimeCapsule, siteDateStatistics } from "@/utils/getTime.js";
-import { mainStore } from "@/store";
+import { useSettingsStore } from "@/store";
 import { useNow } from "@/composables/useNow";
 import config from "@/config";
-const store = mainStore();
+const settings = useSettingsStore();
 
 // 当前时间由全局单一时钟驱动
 const now = useNow();

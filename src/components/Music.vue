@@ -4,18 +4,18 @@
     class="music"
     @mouseenter="volumeShow = true"
     @mouseleave="volumeShow = false"
-    v-show="store.musicOpenState"
+    v-show="player.musicOpenState"
   >
     <div class="btns">
       <span @click="openMusicList()">音乐列表</span>
-      <span @click="store.musicOpenState = false">回到一言</span>
+      <span @click="player.musicOpenState = false">回到一言</span>
     </div>
     <div class="control">
       <go-start theme="filled" size="30" fill="#efefef" @click="changeMusicIndex(0)" />
       <Transition name="fade" mode="out-in">
-        <div :key="store.playerState" class="state" @click="changePlayState">
-          <play-one theme="filled" size="50" fill="#efefef" v-show="!store.playerState" />
-          <pause theme="filled" size="50" fill="#efefef" v-show="store.playerState" />
+        <div :key="player.playerState" class="state" @click="changePlayState">
+          <play-one theme="filled" size="50" fill="#efefef" v-show="!player.playerState" />
+          <pause theme="filled" size="50" fill="#efefef" v-show="player.playerState" />
         </div>
       </Transition>
       <go-end theme="filled" size="30" fill="#efefef" @click="changeMusicIndex(1)" />
@@ -23,8 +23,8 @@
     <div class="menu">
       <div class="name" v-show="!volumeShow">
         <span>{{
-          store.getPlayerData.name
-            ? store.getPlayerData.name + " - " + store.getPlayerData.artist
+          player.playerData.name
+            ? player.playerData.name + " - " + player.playerData.artist
             : "未播放音乐"
         }}</span>
       </div>
@@ -81,13 +81,14 @@ import {
   VolumeNotice,
 } from "@icon-park/vue-next";
 import Player from "@/components/Player.vue";
-import { mainStore } from "@/store";
+import { usePlayerStore, useSettingsStore } from "@/store";
 import config from "@/config";
-const store = mainStore();
+const player = usePlayerStore();
+const settings = useSettingsStore();
 
 // 音量条数据
 const volumeShow = ref(false);
-const volumeNum = ref(store.musicVolume ? store.musicVolume : 0.7);
+const volumeNum = ref(settings.musicVolume ? settings.musicVolume : 0.7);
 
 // 播放列表数据
 const musicListShow = ref(false);
@@ -126,7 +127,7 @@ const changeMusicIndex = (type) => {
 
 // 空格键事件
 const onKeydown = (e) => {
-  if (!store.musicIsOk || e.code !== "Space") {
+  if (!player.musicIsOk || e.code !== "Space") {
     return;
   }
   // 输入框内不拦截空格
@@ -140,7 +141,7 @@ const onKeydown = (e) => {
 
 // 首次打开音乐面板时才挂载播放器
 watch(
-  () => store.musicOpenState,
+  () => player.musicOpenState,
   (value) => {
     if (value) playerLoaded.value = true;
   },
@@ -163,8 +164,8 @@ onBeforeUnmount(() => {
 watch(
   () => volumeNum.value,
   (value) => {
-    store.musicVolume = value;
-    playerRef.value?.changeVolume(store.musicVolume);
+    settings.musicVolume = value;
+    playerRef.value?.changeVolume(settings.musicVolume);
   },
 );
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div id="loader-wrapper" :class="store.imgLoadStatus ? 'loaded' : null">
+  <div id="loader-wrapper" :class="ui.imgLoadStatus ? 'loaded' : null">
     <div class="loader">
       <div class="loader-circle" />
       <div class="loader-text">
@@ -15,10 +15,10 @@
 </template>
 
 <script setup>
-import { mainStore } from "@/store";
+import { useUiStore } from "@/store";
 import config from "@/config";
 
-const store = mainStore();
+const ui = useUiStore();
 
 // 配置
 const siteName = config.site.name;

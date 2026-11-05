@@ -1,15 +1,15 @@
 <template>
-  <div :class="store.mobileOpenState ? 'left hidden' : 'left'">
+  <div :class="ui.mobileOpenState ? 'left hidden' : 'left'">
     <Message />
     <SocialLinks />
   </div>
 </template>
 
 <script setup>
-import { mainStore } from "@/store";
+import { useUiStore } from "@/store";
 import Message from "@/components/Message.vue";
 import SocialLinks from "@/components/SocialLinks.vue";
-const store = mainStore();
+const ui = useUiStore();
 </script>
 
 <style lang="scss" scoped>
