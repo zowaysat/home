@@ -11,10 +11,13 @@
 - 移除未使用依赖 `axios`；移除 sass 中已无效的 `silenceDeprecations` 配置（keep `api: "modern"`）。
 - 依赖升级第二批：Vite 5.4.21 → **6.4.5**（构建约 22s），Vitest 2.1.9 → **3.2.7**；
   Vite 6 默认 `build.target` 变为 baseline-widely-available，显式设置 `target: "es2020"` 保持旧浏览器范围。
-- 验证：68 单测 / 7 条 e2e / lint / build / `pnpm dev` 200 / `pnpm install --frozen-lockfile` 全部通过；
-  PWA 预缓存 41 项 1596 KiB，`sw.js` 路由保持 NetworkFirst + CacheFirst。
+- 依赖升级第三批：Vue 3.4.24 → **3.5.45**、Element Plus 2.7.1 → **2.14.7**；
+  EP 2.14 的 switch 通过 `useAriaProps(["ariaLabel"])` 绑定无障碍名称，`Set.vue` 已改用 `aria-label`。
+- 验证：68 单测 / 7 条 e2e（设置面板开关与持久化、键盘可读名称）/ lint / build（约 28.5s，JS gzip 157.12 KB、
+  CSS gzip 22.55 KB）/ `pnpm dev` 200 / `pnpm install --frozen-lockfile` 全部通过；
+  EP 升级带来约 +15 KB gzip 增量，仍在 JS gzip ≤ 180 KB 预算内。
 - 说明：`vite-plugin-compression@0.5.1` 的 peer 为 `vite >=2`，在 Vite 5/6 下构建正常，暂不替换；
-  Vue 3.5 / Element Plus / ESLint 9 作为后续独立批次。
+  ESLint 9 flat config 作为后续独立批次。
 
 ### 可访问性
 

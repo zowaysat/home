@@ -21,7 +21,7 @@
           <span class="text">建站日期显示</span>
           <el-switch
             v-model="siteStartShow"
-            label="建站日期显示"
+            aria-label="建站日期显示"
             inline-prompt
             :active-icon="CheckSmall"
             :inactive-icon="CloseSmall"
@@ -31,7 +31,7 @@
           <span class="text">音乐点击是否打开面板</span>
           <el-switch
             v-model="musicClick"
-            label="音乐点击是否打开面板"
+            aria-label="音乐点击是否打开面板"
             inline-prompt
             :active-icon="CheckSmall"
             :inactive-icon="CloseSmall"
@@ -41,7 +41,7 @@
           <span class="text">底栏歌词显示</span>
           <el-switch
             v-model="playerLrcShow"
-            label="底栏歌词显示"
+            aria-label="底栏歌词显示"
             inline-prompt
             :active-icon="CheckSmall"
             :inactive-icon="CloseSmall"
@@ -51,7 +51,7 @@
           <span class="text">底栏背景模糊</span>
           <el-switch
             v-model="footerBlur"
-            label="底栏背景模糊"
+            aria-label="底栏背景模糊"
             inline-prompt
             :active-icon="CheckSmall"
             :inactive-icon="CloseSmall"
@@ -63,7 +63,7 @@
           <span class="text">自动播放</span>
           <el-switch
             v-model="playerAutoplay"
-            label="自动播放"
+            aria-label="自动播放"
             inline-prompt
             :active-icon="CheckSmall"
             :inactive-icon="CloseSmall"
@@ -73,7 +73,7 @@
           <span class="text">随机播放</span>
           <el-switch
             v-model="playerOrder"
-            label="随机播放"
+            aria-label="随机播放"
             inline-prompt
             :active-icon="CheckSmall"
             :inactive-icon="CloseSmall"
