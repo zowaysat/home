@@ -127,6 +127,9 @@ export default ({ mode }) =>
       },
     },
     build: {
+      // Vite 6 默认 target 变为 baseline-widely-available（Safari 16+）；
+      // 个人主页仍有较老移动端访问，显式保持与 Vite 5 默认一致的 ES2020 范围
+      target: "es2020",
       minify: "terser",
       terserOptions: {
         compress: {
