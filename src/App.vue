@@ -10,10 +10,10 @@
         <section class="all" v-show="!ui.setOpenState">
           <MainLeft />
           <MainRight v-show="!ui.boxOpenState" />
-          <Box v-show="ui.boxOpenState" />
+          <Box v-if="ui.boxOpenState" />
         </section>
         <section class="more" v-show="ui.setOpenState" @click="ui.setOpenState = false">
-          <MoreSet />
+          <MoreSet v-if="ui.setOpenState" />
         </section>
       </div>
       <!-- 移动端菜单按钮 -->
@@ -38,6 +38,7 @@
 </template>
 
 <script setup>
+import { defineAsyncComponent } from "vue";
 import { helloInit, checkDays } from "@/utils/getTime.js";
 import { HamburgerButton, CloseSmall } from "@icon-park/vue-next";
 import { useBreakpoint } from "@/composables/useBreakpoint";
@@ -48,11 +49,13 @@ import MainLeft from "@/views/Main/Left.vue";
 import MainRight from "@/views/Main/Right.vue";
 import Background from "@/components/Background.vue";
 import Footer from "@/components/Footer.vue";
-import Box from "@/views/Box/index.vue";
-import MoreSet from "@/views/MoreSet/index.vue";
 import cursorInit from "@/utils/cursor.js";
 import config from "@/config";
 import pkg from "@/../package.json";
+
+// 盒子 / 设置面板只在用户打开时加载，减小首屏 JS / CSS
+const Box = defineAsyncComponent(() => import("@/views/Box/index.vue"));
+const MoreSet = defineAsyncComponent(() => import("@/views/MoreSet/index.vue"));
 
 const ui = useUiStore();
 const player = usePlayerStore();

@@ -8,6 +8,34 @@
 
 - 可选：引入 `@vue/test-utils` 组件测试；按季度复核依赖、字体与图片体积。
 
+## [4.3.0] - 2026-11-05（Lighthouse 性能与可访问性）
+
+### 性能
+
+- 移除第三方 HarmonyOS 字体 CSS，正文改用系统字体栈：Lighthouse LCP 5.8s → **0.8s**，
+  同时规避 CDN 防盗链导致的字体失效与第三方隐私问题。
+- 盒子 / 设置面板 / 音乐播放器改为异步分包：首屏 JS gzip **157.12 → 104.79 KB**、CSS **22.55 → 13.19 KB**。
+- 移除 270 KB 的 `favicon.ico`，改用 96px PNG（`VITE_SITE_LOGO`）。
+- PWA 预缓存瘦身：排除 10 张壁纸与音乐分包（1390 → **600 KiB**），壁纸走运行时 CacheFirst，
+  避免 Service Worker 安装时抢占首屏带宽。
+- 加载层随机 300–600ms 延迟改为 50ms；Service Worker 内联注册，少一个请求。
+
+### 可访问性
+
+- 修复 Lighthouse 3 类问题：社交图标缺 `alt` / 链接无名称、描述卡片等可见文本与 `aria-label` 不一致
+  （改用 `.sr-only` 后缀，兼顾可读名称）。
+- 图片补充 `width` / `height` 属性，消除“尺寸未声明”与布局偏移；Accessibility **90 → 100**。
+
+### SEO
+
+- 新增 `public/robots.txt`；SEO **83 → 100**。
+
+### 验证
+
+- Lighthouse 移动端连续 3 次：**Performance 98–99 / Accessibility 100 / Best Practices 96 / SEO 100**；
+  FCP 0.8s、LCP 0.8s、CLS 0、TBT 100–160ms。
+- 单测 68、e2e 7、lint 全绿；版本升至 **4.3.0**。
+
 ## [4.2.0] - 2026-11-05（长期维护基线）
 
 ### 部署与发布
@@ -100,6 +128,7 @@
 - 引入 Vitest，覆盖时间、防抖、配置、HTTP、天气、一言、音乐、壁纸等核心逻辑。
 - 删除旧 `src/api/index.js`。
 
-[Unreleased]: https://github.com/zowaysat/home/compare/v4.2.0...HEAD
+[Unreleased]: https://github.com/zowaysat/home/compare/v4.3.0...HEAD
+[4.3.0]: https://github.com/zowaysat/home/releases/tag/v4.3.0
 [4.2.0]: https://github.com/zowaysat/home/releases/tag/v4.2.0
 [4.1.4]: https://github.com/zowaysat/home/releases/tag/v4.1.4

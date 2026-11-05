@@ -21,6 +21,8 @@ export default ({ mode }) =>
       }),
       VitePWA({
         registerType: "autoUpdate",
+        // 内联注册 Service Worker，省掉 registerSW.js 的额外请求
+        injectRegister: "inline",
         // manifest 里的图标已由 globPatterns 纳入预缓存，避免重复注入
         includeManifestIcons: false,
         workbox: {
@@ -29,9 +31,13 @@ export default ({ mode }) =>
           // 关闭插件默认的 precache 导航回退，交给下方 NetworkFirst 处理 HTML，
           // 避免升级后用户长时间停留在旧 index.html
           navigateFallback: "",
-          // app shell + 本地静态资源（壁纸 / 字体 / 图标）全部预缓存；
+          // app shell + 本地静态资源（图标 / 字体 / 设置面板分包）预缓存；
           // js/css 由 workbox 的 revision 机制管理，不再用运行时 CacheFirst
           globPatterns: ["**/*.{js,css,html,ico,png,svg,jpg,jpeg,webp,woff2,woff,ttf}"],
+          // 体积极大或首屏不需要的资源不进预缓存，避免安装 SW 时抢占首屏带宽：
+          // - 壁纸走运行时 image CacheFirst（首次访问后即可离线）
+          // - 音乐分包仅在配置了歌单时才加载
+          globIgnores: ["images/background*.jpg", "assets/Music-*.js", "assets/Music-*.css"],
           // 清理不再被引用的旧预缓存，避免升级后残留
           cleanupOutdatedCaches: true,
           runtimeCaching: [

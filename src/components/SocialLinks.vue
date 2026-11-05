@@ -7,10 +7,11 @@
         :key="item.name"
         :href="item.url"
         target="_blank"
+        rel="noopener noreferrer"
         @mouseenter="socialTip = item.tip"
         @mouseleave="socialTip = '通过这里联系我吧'"
       >
-        <img class="icon" :src="item.icon" height="24" />
+        <img class="icon" :src="item.icon" :alt="item.name" width="24" height="24" />
       </a>
     </div>
     <span class="tip">{{ socialTip }}</span>

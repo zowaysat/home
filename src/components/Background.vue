@@ -5,6 +5,8 @@
       :src="bgUrl"
       class="bg"
       alt="cover"
+      width="1920"
+      height="1080"
       @load="imgLoadComplete"
       @error.once="imgLoadError"
       @animationend="imgAnimationEnd"
@@ -47,14 +49,11 @@ const changeBg = (type) => {
   bgUrl.value = resolveWallpaperUrl(type, { remoteEnabled: remoteWallpaperEnabled, localIndex });
 };
 
-// 图片加载完成
+// 图片加载完成（短暂让出主线程后显示主界面，避免首屏被加载层长时间遮挡）
 const imgLoadComplete = () => {
-  imgTimeout.value = setTimeout(
-    () => {
-      ui.setImgLoadStatus(true);
-    },
-    Math.floor(Math.random() * (600 - 300 + 1)) + 300,
-  );
+  imgTimeout.value = setTimeout(() => {
+    ui.setImgLoadStatus(true);
+  }, 50);
 };
 
 // 图片动画完成

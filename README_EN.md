@@ -117,49 +117,10 @@ VITE_SONG_ID = "7452421335"
 
 ### Fonts
 
-> Logo / LED fonts are subset with `pnpm fonts:subset` (sources in `scripts/fonts/source/`,
-> generated files in `public/font/`; see [public/font/README.md](public/font/README.md)).
-
-Now using `HarmonyOS Sans` open source font, using font splitting to improve loading speed
-
->Because this site's `CDN` has opened anti-leech, **non-site domain name is not accessible**, please change the font import link to the following content, otherwise **custom fonts will be invalid**
->
->`https://cdn.jsdelivr.net/gh/imsyy/file/font/HarmonyOS_Sans/regular.min.css`
-
-<details>
-<summary>old way</summary>
-
->As Chinese fonts are introduced in this project, Chinese fonts need to be compressed to improve the loading speed of the page (you can also cancel the use of Chinese fonts)
-
-#### Chinese font removal traditional
-
-- Install `Python 3.7` and `pip`
-- Run `pip install fonttools`
-- Download [sc_unicode.txt](https://gist.githubusercontent.com/imaegoo/d64e5088b723c2e02c40985f55ff12db/raw/5ebd2ce49418c73459a9dfe050483409306a6c1d/sc_unicode.txt)
-- Run `pyftsubset font-name.ttf --unicodes-file=sc_unicode.txt`
-
-#### fonts further compressed
-
-- Compile and install ``Google woff2``
-
-```bash
-sudo apt-get install -y git g++ make
-git clone --recursive https://github.com/google/woff2.git
-cd woff2
-make clean all
-```
-
-- Compress the font again
-
-```
-. /woff2_compress . /font_name.ttf
-```
-
-- Eventually the original font can be slow loaded, **load the compressed font first**
-
->For more information, please go to [虹墨空间站](https://www.imaegoo.com/2020/chinese-font-compress/) to view the original article
-
-</details>
+- Body text uses the system font stack (`-apple-system` / `Segoe UI` / `PingFang SC` / `Microsoft YaHei`, ...),
+  with no third-party HarmonyOS font CSS (avoids render blocking, CDN anti-leech failures and privacy issues).
+- Logo / LED fonts are subset with `pnpm fonts:subset` (sources in `scripts/fonts/source/`,
+  generated files in `public/font/`; see [public/font/README.md](public/font/README.md)).
 
 ### Technology Stack
 

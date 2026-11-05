@@ -29,13 +29,16 @@
 </template>
 
 <script setup>
+import { defineAsyncComponent } from "vue";
 import { getCurrentTime } from "@/utils/getTime";
 import { useUiStore } from "@/store";
 import { useNow } from "@/composables/useNow";
 import config from "@/config";
-import Music from "@/components/Music.vue";
 import Hitokoto from "@/components/Hitokoto.vue";
 import Weather from "@/components/Weather.vue";
+
+// 音乐播放器（含 APlayer）只在配置了歌单 ID 时按需加载
+const Music = defineAsyncComponent(() => import("@/components/Music.vue"));
 
 const ui = useUiStore();
 

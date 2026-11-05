@@ -207,7 +207,7 @@ defineExpose({ playToggle, changeVolume, changeSong, toggleList });
 .aplayer {
   width: 80%;
   border-radius: 6px;
-  font-family: "HarmonyOS_Regular", sans-serif !important;
+  font-family: inherit !important;
   :deep(.aplayer-body) {
     background-color: transparent;
     .aplayer-pic {

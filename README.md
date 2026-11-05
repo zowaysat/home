@@ -72,7 +72,8 @@ pnpm test
 pnpm build
 ```
 
-> 构建完成后，静态资源在 **`dist` 目录** 中生成。体积基线：JS gzip ≤ 180 KB、CSS gzip ≤ 30 KB。
+> 构建完成后，静态资源在 **`dist` 目录** 中生成。当前首屏体积约 JS gzip **105 KB**、CSS gzip **13 KB**
+> （基线 ≤ 180 / ≤ 30 KB）；Lighthouse 移动端 Performance / Accessibility / Best Practices ≈ **98 / 100 / 96**。
 
 ### 🧪 测试与质量
 
@@ -185,49 +186,10 @@ VITE_SONG_ID = "7452421335"
 
 ### 字体
 
-> Logo / 数字字体已使用 `pnpm fonts:subset` 做子集化，源字体在 `scripts/fonts/source/`，
-> 生成结果在 `public/font/`（说明见 [public/font/README.md](public/font/README.md)）。
-
-现采用 `HarmonyOS Sans` 开源字体，采用字体拆分，提升加载速度
-
-> 由于本站 `CDN` 已开启防盗链，**非本站域名不可访问**，请将字体引入链接更改为下方内容，否则 **自定义字体将失效**
->
-> `https://s1.hdslb.com/bfs/static/jinkela/long/font/regular.css`
-
-<details>
-<summary>旧版方式</summary>
-
-> 由于本项目引入了中文字体，需要压缩中文字体以提高网页加载速度（ 也可以取消使用中文字体 ）
-
-#### 中文字体去除繁体
-
-- 安装 `Python 3.7` 和 `pip`
-- 运行 `pip install fonttools`
-- 下载 [sc_unicode.txt](https://gist.githubusercontent.com/imaegoo/d64e5088b723c2e02c40985f55ff12db/raw/5ebd2ce49418c73459a9dfe050483409306a6c1d/sc_unicode.txt)
-- 运行 `pyftsubset 字体名称.ttf --unicodes-file=sc_unicode.txt`
-
-#### 字体进一步压缩
-
-- 编译安装 `Google woff2`
-
-```bash
-sudo apt-get install -y git g++ make
-git clone --recursive https://github.com/google/woff2.git
-cd woff2
-make clean all
-```
-
-- 再压缩字体
-
-```
-./woff2_compress ./字体名称.ttf
-```
-
-- 最终可对原字体进行缓加载，**先行加载压缩后的字体**
-
-> 详细信息可前往 [虹墨空间站](https://www.imaegoo.com/2020/chinese-font-compress/) 查看原文
-
-</details>
+- 正文使用系统字体栈（`-apple-system` / `Segoe UI` / `PingFang SC` / `Microsoft YaHei` 等），
+  不依赖第三方 HarmonyOS 字体 CSS，避免首屏阻塞、CDN 防盗链失效与隐私问题。
+- Logo / 数字字体已使用 `pnpm fonts:subset` 做子集化：源字体在 `scripts/fonts/source/`，
+  生成结果在 `public/font/`（说明见 [public/font/README.md](public/font/README.md)）。
 
 ### 网站图标及网站背景
 

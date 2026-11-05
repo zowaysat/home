@@ -3,7 +3,7 @@
   <div class="message">
     <!-- Logo -->
     <div class="logo">
-      <img class="logo-img" :src="siteLogo" alt="logo" />
+      <img class="logo-img" :src="siteLogo" alt="站点 Logo" width="180" height="180" />
       <div :class="{ name: true, 'text-hidden': true, long: siteUrl.primary.length >= 6 }">
         <span class="bg">{{ siteUrl.primary }}</span>
         <span v-if="siteUrl.suffix" class="sm">.{{ siteUrl.suffix }}</span>
@@ -13,7 +13,6 @@
     <button
       type="button"
       class="description cards plain-button"
-      aria-label="查看更多信息"
       :aria-expanded="ui.boxOpenState"
       @click="changeBox"
     >
@@ -31,6 +30,7 @@
           <QuoteRight />
         </Icon>
       </span>
+      <span class="sr-only">（查看更多信息）</span>
     </button>
   </div>
 </template>
@@ -99,6 +99,7 @@ watch(
     .logo-img {
       border-radius: 50%;
       width: 120px;
+      height: auto;
     }
     .name {
       width: 100%;

@@ -4,12 +4,12 @@
     <button
       type="button"
       class="logo text-hidden plain-button"
-      aria-label="切换移动端功能区"
       :aria-expanded="ui.mobileFuncState"
       @click="ui.mobileFuncState = !ui.mobileFuncState"
     >
       <span class="bg">{{ siteUrl.primary }}</span>
       <span v-if="siteUrl.suffix" class="sm">.{{ siteUrl.suffix }}</span>
+      <span class="sr-only">（切换移动端功能区）</span>
     </button>
     <!-- 功能区 -->
     <Func />

@@ -17,11 +17,11 @@
         type="button"
         :key="hitokotoData.text"
         class="content plain-button"
-        aria-label="刷新一言"
         @click="updateHitokoto"
       >
         <span class="text">{{ hitokotoData.text }}</span>
         <span class="from">-「&nbsp;{{ hitokotoData.from }}&nbsp;」</span>
+        <span class="sr-only">（点击刷新一言）</span>
       </button>
     </Transition>
   </div>
