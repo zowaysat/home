@@ -1,5 +1,0 @@
-node_modules
-dist
-.gitignore
-# 自动生成的类型声明，不需要（也不应该）参与 lint
-*.d.ts

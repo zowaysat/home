@@ -74,7 +74,7 @@ export const getWeather = async ({ key = "", ...options } = {}) => {
   for (const provider of providers) {
     try {
       return await provider();
-    } catch (error) {
+    } catch {
       // 继续尝试下一个来源，最终由调用方展示占位符
     }
   }

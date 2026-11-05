@@ -16,8 +16,14 @@
 - 验证：68 单测 / 7 条 e2e（设置面板开关与持久化、键盘可读名称）/ lint / build（约 28.5s，JS gzip 157.12 KB、
   CSS gzip 22.55 KB）/ `pnpm dev` 200 / `pnpm install --frozen-lockfile` 全部通过；
   EP 升级带来约 +15 KB gzip 增量，仍在 JS gzip ≤ 180 KB 预算内。
+- 依赖升级第四批：ESLint 8.57 → **9.39.5** + flat config；`eslint-plugin-vue` 9.25 → **10.12.0**，
+  新增 `@eslint/js@9` / `globals` / `vue-eslint-parser@10`；删除 `.eslintrc.json` / `.eslintignore`，
+  新增 `eslint.config.js`；`lint` / `lint:check` 脚本改为 `eslint .`（不再需要 `--ext`）。
+- 顺带修复 ESLint 9 报出的问题：2 处未使用的 catch 参数、`vite.config.js` 冗余的 eslint-disable。
+- 验证：`pnpm lint:check` 覆盖 57 个文件（19 个 `.vue` + 38 个 js/mjs）0 error / 0 warning；
+  68 单测、build（约 26.4s）、`pnpm install --frozen-lockfile` 均通过。
 - 说明：`vite-plugin-compression@0.5.1` 的 peer 为 `vite >=2`，在 Vite 5/6 下构建正常，暂不替换；
-  ESLint 9 flat config 作为后续独立批次。
+  剩余工作为 #14 发布流水线与 tag，以及可选的组件测试。
 
 ### 可访问性
 

@@ -47,7 +47,7 @@ const getHitokotoData = async () => {
     const result = await getHitokoto();
     hitokotoData.text = result.text;
     hitokotoData.from = result.from;
-  } catch (error) {
+  } catch {
     ElMessage({
       message: "一言获取失败",
       icon: h(Error, {
