@@ -4,6 +4,13 @@
 
 ## [Unreleased]
 
+### 计划中
+
+- 下季度大版本批次：Vite 7/8、vite-plugin-pwa 2、unplugin 系列、Pinia 4（顺带解决剩余 2 moderate / 2 low 构建链传递依赖）。
+- 远端 CI 首跑确认后关闭 DoD 最后一项。
+
+## [4.3.1] - 2026-11-05（测试补齐 + 依赖安全维护）
+
 ### 测试
 
 - 引入 `@vue/test-utils@2.5.1` + `happy-dom@21.0.4`，补齐组件测试：
@@ -12,9 +19,25 @@
 - `vitest.config.js` 增加 Vue SFC 编译与自动导入插件（关闭 EP 样式注入，避免测试环境加载 CSS）；
   单测规模 13 文件 / 68 用例 → **15 文件 / 72 用例**。
 
-### 计划中
+### 依赖安全
 
-- 按季度复核依赖、字体与图片体积；远端 CI 首跑确认后关闭 DoD 最后一项。
+- **`swiper` 11.1.1 → 14.4.0**：修复 critical 原型污染漏洞；`swiper/vue`、`swiper/modules` 导入路径不变。
+- **Vitest 3.2.7 → 5.1.0**：移除存在 critical tinypool 漏洞与嵌套 Vite 高危漏洞的传递依赖。
+- **ESLint 9.39.5 → 10.14.0** + `@eslint/js` 10（flat config 不变），修复 `no-useless-assignment` 暴露的 2 处代码问题。
+- **sass 1.75.0 → 1.107.1**（modern API），修复其传递依赖中的 immutable / source-map-js / chokidar 等漏洞。
+- 小版本升级：`dayjs` 1.11.23、`fetch-jsonp` 1.4.0、`@worstone/vue-aplayer` 1.0.8、`@vicons/fa` 0.13.0、
+  `prettier` 3.9.10、`terser` 5.51.2。
+- **移除 `lodash-es`**：cursor 改用本地坐标比较，并改为仅在开启自定义光标时异步加载；
+  首屏 JS gzip 104.79 → **98.19 KB**。
+- `pnpm-workspace.yaml` 增加 `overrides`，把构建链传递依赖固定在原 major 内的已修复 patch 版本
+  （braces / picomatch / brace-expansion / minimatch / micromatch / ajv / browserslist / @babel 系列）。
+- 审计结果：`pnpm audit` critical 3 → **0**、high 21 → **0**；剩余 2 moderate + 2 low 均为构建工具链传递依赖
+  （`glob` / `minimatch` / `@babel/core` / `deepmerge`），不进入运行时产物，记入下季度 Vite 8 / PWA 2 批次。
+
+### 验证
+
+- 单测 15 文件 / 72 用例、e2e 7 条、`lint:check`、`build` 全部通过；
+- Lighthouse 移动端：Performance 98 / Accessibility 100 / Best Practices 96 / SEO 100，LCP 0.8s、CLS 0。
 
 ## [4.3.0] - 2026-11-05（Lighthouse 性能与可访问性）
 
@@ -136,7 +159,8 @@
 - 引入 Vitest，覆盖时间、防抖、配置、HTTP、天气、一言、音乐、壁纸等核心逻辑。
 - 删除旧 `src/api/index.js`。
 
-[Unreleased]: https://github.com/zowaysat/home/compare/v4.3.0...HEAD
+[Unreleased]: https://github.com/zowaysat/home/compare/v4.3.1...HEAD
+[4.3.1]: https://github.com/zowaysat/home/releases/tag/v4.3.1
 [4.3.0]: https://github.com/zowaysat/home/releases/tag/v4.3.0
 [4.2.0]: https://github.com/zowaysat/home/releases/tag/v4.2.0
 [4.1.4]: https://github.com/zowaysat/home/releases/tag/v4.1.4

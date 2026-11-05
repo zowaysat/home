@@ -72,7 +72,7 @@ pnpm test
 pnpm build
 ```
 
-> 构建完成后，静态资源在 **`dist` 目录** 中生成。当前首屏体积约 JS gzip **105 KB**、CSS gzip **13 KB**
+> 构建完成后，静态资源在 **`dist` 目录** 中生成。当前首屏体积约 JS gzip **98 KB**、CSS gzip **11 KB**
 > （基线 ≤ 180 / ≤ 30 KB）；Lighthouse 移动端 Performance / Accessibility / Best Practices ≈ **98 / 100 / 96**。
 
 ### 🧪 测试与质量

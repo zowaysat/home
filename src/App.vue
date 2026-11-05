@@ -49,7 +49,6 @@ import MainLeft from "@/views/Main/Left.vue";
 import MainRight from "@/views/Main/Right.vue";
 import Background from "@/components/Background.vue";
 import Footer from "@/components/Footer.vue";
-import cursorInit from "@/utils/cursor.js";
 import config from "@/config";
 import pkg from "@/../package.json";
 
@@ -122,8 +121,10 @@ const onKeydown = (event) => {
 };
 
 onMounted(() => {
-  // 自定义鼠标（默认关闭，见 VITE_FEATURE_CUSTOM_CURSOR）
-  if (customCursorEnabled) cursorInit();
+  // 自定义鼠标（默认关闭，见 VITE_FEATURE_CUSTOM_CURSOR）：按需异步加载，避免影响首屏
+  if (customCursorEnabled) {
+    import("@/utils/cursor.js").then(({ default: cursorInit }) => cursorInit());
+  }
 
   // 屏蔽右键（默认关闭，见 VITE_FEATURE_CONTEXT_MENU_LOCK）
   if (contextMenuLockEnabled) document.oncontextmenu = onContextMenu;

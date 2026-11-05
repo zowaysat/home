@@ -1,10 +1,24 @@
 # pnpm 构建脚本白名单
 # 说明：pnpm 10+ 默认拦截依赖的 install/postinstall 脚本。
-# 本项目构建只需要 esbuild（Vite 依赖）与 vue-demi（Pinia 依赖），
-# 其他依赖的构建脚本保持默认禁用。
+# 本项目构建需要 esbuild（Vite 依赖）、vue-demi（Pinia 依赖）与
+# @parcel/watcher（sass 新版的文件监听依赖）的构建脚本。
 allowBuilds:
+  '@parcel/watcher': true
   esbuild: true
   vue-demi: true
+# 安全补丁：强制构建工具链的传递依赖使用已修复版本（均在原 major 内，patch 级）
+# 说明：这些依赖只用于构建（unplugin / vite-plugin-pwa / workbox），不进入运行时产物。
+overrides:
+  'braces@^3': 3.0.3
+  'picomatch@^2': 2.3.2
+  'brace-expansion@^1': 1.1.21
+  'minimatch@^5': 5.1.8
+  'micromatch@^4': 4.0.8
+  'ajv@^8': 8.20.0
+  'browserslist@^4': 4.28.7
+  '@babel/plugin-transform-modules-systemjs@^7': 7.29.4
+  '@babel/runtime@^7': 7.29.13
+  '@babel/helpers@^7': 7.29.13
 minimumReleaseAgeExclude:
   - '@vue/compiler-core@3.5.45'
   - '@vue/compiler-dom@3.5.45'
@@ -16,3 +30,5 @@ minimumReleaseAgeExclude:
   - '@vue/server-renderer@3.5.45'
   - '@vue/shared@3.5.45'
   - vue@3.5.45
+  - '@babel/helpers@7.29.13'
+  - '@babel/runtime@7.29.13'

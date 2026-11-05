@@ -1,5 +1,3 @@
-import { isEqual } from "lodash-es";
-
 let mainCursor;
 
 const lerp = (a, b, n) => {
@@ -8,6 +6,9 @@ const lerp = (a, b, n) => {
   }
   return (1 - n) * a + n * b;
 };
+
+/** 比较两个坐标对象，替代 lodash isEqual（仅此处需要） */
+const samePos = (a, b) => a?.x === b?.x && a?.y === b?.y;
 
 const getStyle = (el, attr) => {
   try {
@@ -94,7 +95,7 @@ class Cursor {
     } else {
       this.pos.prev = this.pos.curr;
     }
-    if (!isEqual(this.pos.curr, this.pos.prev)) {
+    if (!samePos(this.pos.curr, this.pos.prev)) {
       requestAnimationFrame(() => this.render());
     }
   }
