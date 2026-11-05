@@ -4,6 +4,12 @@ English | [Chinese](./README.md)
 > ## 致大家
 > This project was originally just a simple homepage. However, as more and more friends discovered this project, it received a lot of undue attention. Moreover, as a work of a beginner in front-end development, its code is quite messy and of low quality. In addition, this project has also been resold by many unknown resource or download sites, causing many unsuspecting buyers to find my contact information from the source code to consult on problems or request features. But due to current personal life reasons, and I have never gained any benefits from this project, so I am unable to maintain this project. This repository will not be archived. We will actively accept PRs from all the experts, but no updates will be made for any new features or bugs. Please understand!
 
+> [!NOTE]
+> This repository is a fork of `imsyy/home` maintained according to the
+> [long-term maintenance plan](docs/长期维护方案.md). The upstream repository is archived;
+> see the [CHANGELOG](CHANGELOG.md) for changes and the
+> [upgrade checklist](docs/升级检查清单.md) for the upgrade process.
+
 <p>
 <strong><h2>Homepage</h2></strong>
 Simple little homepage, had enough of the original one and made a new one
@@ -36,29 +42,52 @@ Simple little homepage, had enough of the original one and made a new one
 
 ### Deployment
 
-* **Installation** [node.js](https://nodejs.org/zh-cn/) **Environment**
-
-  > node > 16.16.0  
-  > npm > 8.15.0
-  
-* Then run the `cmd` terminal with **administrator privileges** and `cd` to the project root directory
-* In the `terminal` type:
+* **Installation** [node.js](https://nodejs.org/) **Environment** (Node.js 22 LTS, pnpm 12)
+* Copy `.env.example` to `.env` and adjust it (the build prints a clear hint when it is missing)
+* Then run in the project root:
 
 ```bash
-# Install pnpm
-npm install -g pnpm
+# Install dependencies (same as CI)
+pnpm install --frozen-lockfile
 
-# Install the dependencies
-pnpm install
+# Validate required environment variables
+pnpm check:env
 
-# Preview
+# Development
 pnpm dev
+
+# Quality checks
+pnpm lint:check
+pnpm test
 
 # Build
 pnpm build
 ```
 
-> Once the build is complete, the files in the `dist` folder can be uploaded to the server or imported and automatically deployed with one click using a hosting platform such as `Vercel`.
+> Once the build is complete, the files in the `dist` folder can be uploaded to any static host
+> (Vercel / Netlify / Cloudflare Pages, etc.).
+
+### Testing
+
+```bash
+pnpm test          # Vitest unit tests (13 files / 68 cases)
+pnpm test:e2e      # Playwright smoke tests (7 cases, build + preview)
+pnpm lint:check    # ESLint 9 flat config
+pnpm fonts:subset  # Regenerate subset fonts
+```
+
+### Docker
+
+```bash
+docker build -t home .
+docker run -p 8080:8080 -d home
+
+# or with compose
+docker compose up -d --build
+```
+
+The image uses a multi-stage build (`node:22-alpine` → `nginxinc/nginx-unprivileged`,
+non-root, listening on 8080). The build uses `.env` when present, otherwise `.env.example`.
 
 ### Weather
 
@@ -87,6 +116,9 @@ VITE_SONG_ID = "7452421335"
 ```
 
 ### Fonts
+
+> Logo / LED fonts are subset with `pnpm fonts:subset` (sources in `scripts/fonts/source/`,
+> generated files in `public/font/`; see [public/font/README.md](public/font/README.md)).
 
 Now using `HarmonyOS Sans` open source font, using font splitting to improve loading speed
 
@@ -131,12 +163,14 @@ make clean all
 
 ### Technology Stack
 
-* [Vue](https://cn.vuejs.org/)
-* [Vite](https://vitejs.cn/vite3-cn/)
+* [Vue 3.5](https://cn.vuejs.org/)
+* [Vite 6](https://cn.vitejs.dev/)
 * [Pinia](https://pinia.vuejs.org/zh/)
+* [Element Plus](https://element-plus.org/en-US/)
 * [IconPark](https://iconpark.oceanengine.com/official)
 * [xicons](https://xicons.org/)
 * [Aplayer](https://aplayer.js.org/)
+* [Vitest](https://vitest.dev/) / [Playwright](https://playwright.dev/) / ESLint 9
 
 ### API
 

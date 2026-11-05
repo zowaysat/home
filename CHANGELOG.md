@@ -4,6 +4,21 @@
 
 ## [Unreleased]
 
+### 计划中
+
+- 可选：引入 `@vue/test-utils` 组件测试；按季度复核依赖、字体与图片体积。
+
+## [4.2.0] - 2026-11-05（长期维护基线）
+
+### 部署与发布
+
+- Dockerfile 重写：Node 22 + pnpm（corepack / `--frozen-lockfile`）多阶段构建；运行时使用
+  `nginxinc/nginx-unprivileged`（非 root、监听 8080），新增 gzip_static、静态资源缓存头、SPA 回退与健康检查；
+  `docker-compose.yml` 同步更新。
+- 新增 `.github/workflows/release.yml`：推送 `v*` tag 触发 lint/test/build，创建 GitHub Release 并附带 `home-dist.zip`。
+- README（中/英）更新：开发 / 测试 / Docker / CI 说明与路径校准，新增维护说明与文档链接。
+- `package.json` 增加 `packageManager: pnpm@12.3.4`、`engines.node >= 22`，版本升至 **4.2.0**。
+
 ### 构建工具链
 
 - 依赖升级第一批：Vite 4.5 → **5.4.21**（构建约 31s → 22s），`@vitejs/plugin-vue` 5.2.4、
@@ -85,5 +100,6 @@
 - 引入 Vitest，覆盖时间、防抖、配置、HTTP、天气、一言、音乐、壁纸等核心逻辑。
 - 删除旧 `src/api/index.js`。
 
-[Unreleased]: https://github.com/zowaysat/home/compare/v4.1.4...HEAD
+[Unreleased]: https://github.com/zowaysat/home/compare/v4.2.0...HEAD
+[4.2.0]: https://github.com/zowaysat/home/releases/tag/v4.2.0
 [4.1.4]: https://github.com/zowaysat/home/releases/tag/v4.1.4

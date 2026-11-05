@@ -4,8 +4,12 @@
   "github": "https://github.com/imsyy/home",
   "home": "https://imsyy.top",
   "private": true,
-  "version": "4.1.4",
+  "version": "4.2.0",
   "type": "module",
+  "packageManager": "pnpm@12.3.4",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "node scripts/check-env.mjs development && vite --host",
     "build": "node scripts/check-env.mjs production && vite build",
