@@ -20,7 +20,8 @@ permissions:
 jobs:
   quality:
     name: Lint / Test / Build
-    runs-on: ubuntu-latest
+    # 固定在 Playwright / GitHub Actions 官方支持的 Ubuntu LTS，避免 ubuntu-latest 迁移带来环境漂移
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
 
     steps:
@@ -63,7 +64,7 @@ jobs:
 
   e2e:
     name: E2E (Playwright)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
 
     steps:
@@ -88,7 +89,18 @@ jobs:
         run: cp .env.example .env
 
       - name: Install Chromium
-        run: pnpm exec playwright install --with-deps chromium
+        # 网络/apt 偶发失败时重试，避免 e2e 因下载波动红掉
+        run: |
+          for i in 1 2 3; do
+            if pnpm exec playwright install --with-deps chromium; then
+              break
+            fi
+            if [ "$i" = "3" ]; then
+              exit 1
+            fi
+            echo "Playwright install failed (attempt $i), retrying in 10s..."
+            sleep 10
+          done
 
       # webServer 会自行执行 pnpm build + pnpm preview
       - name: Run e2e smoke tests
@@ -102,4 +114,5 @@ jobs:
           path: |
             playwright-report
             test-results
+          if-no-files-found: ignore
           retention-days: 7
