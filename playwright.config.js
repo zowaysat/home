@@ -21,7 +21,8 @@ export default defineConfig({
     video: "off",
   },
   webServer: {
-    command: `pnpm build && pnpm preview --port ${PORT} --strictPort`,
+    // 显式绑定 127.0.0.1：CI (Linux) 上 localhost 可能只解析为 ::1，导致 Playwright 等待 127.0.0.1 超时
+    command: `pnpm build && pnpm preview --host 127.0.0.1 --port ${PORT} --strictPort`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
